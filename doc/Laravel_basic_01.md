@@ -2,6 +2,7 @@
 
 ### 目次
 [1-1_Laravelの基本を理解しよう](#1-1_Laravelの基本を理解しよう)</br>
+[1-2_アプリケーションを用意しよう](#1-2_アプリケーションを用意しよう)</br>
 
 </br>
 
@@ -85,5 +86,15 @@ Starting Laravel development server: http://127.0.0.1:8000
 (http://localhost:8000/)
 にアクセスして下記の画面が表示されていれば正しく起動している。</br>
 ![on_Laravel](/img/Laravel.png)
+</br>
+
+また、サーバーを停止する際はターミナル上で`ctrl + c`で停止する。</br>
+</br>
+
+* **artisan**とは</br>
+  ターミナルで「artisan」(アーティサン)コマンドを使ってLaravelの機能を呼び出すことができる。</br>
+  LaravelでWebアプリケーションを開発するときに役に立つ、数多くのコマンドを提供している。</br>
+</br>
+
 
 

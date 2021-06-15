@@ -54,6 +54,36 @@ Web掲示板を作成する中で、Webアプリケーションの基本的な�
 </br>
 
 ### 1-2_アプリケーションを用意しよう
-ターミナルで
+ターミナルで`public_html`というディレクトリを作成後、`bbs`というプロジェクト(ディレクトリ)を作成する。</br>
+Laravelのインストールについては[こちら](/doc/Laravel_install_00.md)を参照。</br>
+```bash
+$ mkdir public_html
+$ cd public_html
+$ laravel new bbs
+# 今回は学習もかねてcomposerコマンドの方で実行した。
+# $ composer create-project laravel/laravel プロジェクト名 --prefer-dist
+
+# プロジェクトが作成できたら
+$ cd bbs
+$ php artisan -v
+# 下記のように出てきたらOK
+Laravel Framework 8.46.0
+以下略
+```
+</br>
+
+それでは動作確認を行う。</br>
+Laravelの管理コマンドを呼び出してサーバーを起動する。</br>
+
+```bash
+$ php artisan serve
+# 下記のように表示される
+Starting Laravel development server: http://127.0.0.1:8000
+[Tue Jun 15 13:01:49 2021] PHP 8.0.6 Development Server (http://127.0.0.1:8000) started
+```
+サーバー起動後、
+(http://localhost:8000/)
+にアクセスして下記の画面が表示されていれば正しく起動している。</br>
+![on_Laravel](/img/Laravel.png)
 
 

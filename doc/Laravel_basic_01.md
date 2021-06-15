@@ -96,5 +96,21 @@ Starting Laravel development server: http://127.0.0.1:8000
   LaravelでWebアプリケーションを開発するときに役に立つ、数多くのコマンドを提供している。</br>
 </br>
 
+* 参考にディレクトリ作成(`laravel new ~`)を早くする方法</br>
+  ```bash
+  $ composer config -g repositories.packagist composer 'https://packagist.jp'
+  $ composer global require hirak/prestissimo
+  ```
+  今回はローカル環境では実行していない。</br>
+</br>
+
+***
+</br>
+
+### 1-3_Laravel で HelloWorld
+備考：(localhost:8000/)
+に接続して出てくるLaravelの画面(下記参照)はデフォルトで用意されている画像である。</br>
+![on_Laravel](/img/Laravel.png)</br>
+場所は`/resources/views/welcome.blade.php/`である。
 
 

@@ -111,6 +111,19 @@ Starting Laravel development server: http://127.0.0.1:8000
 備考：(localhost:8000/)
 に接続して出てくるLaravelの画面(下記参照)はデフォルトで用意されている画像である。</br>
 ![on_Laravel](/img/Laravel.png)</br>
-場所は`/resources/views/welcome.blade.php/`である。
+場所は`/resources/views/welcome.blade.php/`である。</br>
+それではこのWelcomeページを編集してみる。</br>
+
+```html
+<p><?= date('y,m,d'); ?></p>
+```
+借りに上記のようなタグを挿入する事でPHPプログラムを挿入する事が可能。</br>
+</br>
+
+***
+</br>
+
+### 1-4_
+
 
 

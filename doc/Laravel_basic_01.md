@@ -345,5 +345,72 @@ class CreateArticlesTable extends Migration
 それでは編集したマイグレーションファイルを実行しよう。
 ```shell
 $ php artisan migrate
+# しかし、エラーで正常に実行できず
+ Illuminate\Database\QueryException 
 
+  SQLSTATE[HY000] [1049] Unknown database 'mybbs' (SQL: select * from information_schema.tables where table_schema = mybbs and table_name = migrations and table_type = 'BASE TABLE')
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:692
+    688▕         // If an exception occurs when attempting to run a query, we'll format the error
+    689▕         // message to include the bindings with SQL, which will make this exception a
+    690▕         // lot more helpful to the developer instead of just the database's errors.
+    691▕         catch (Exception $e) {
+  ➜ 692▕             throw new QueryException(
+    693▕                 $query, $this->prepareBindings($bindings), $e
+    694▕             );
+    695▕         }
+    696▕ 
+
+      +33 vendor frames 
+  34  artisan:37
+      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
 ```
+</br>
+
+エラーが発生したため`.env`の内容を下記に訂正。
+```s
+// .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mydbs
+DB_USERNAME=root
+# DB_PASSWORD=
+
+↓
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=8889
+DB_DATABASE=mybbs
+DB_USERNAME=root
+DB_PASSWORD=root
+```
+書き換え後に実行
+```shell
+# 一度キャッシュをクリア
+% php artisan config:cache
+
+Configuration cache cleared!
+Configuration cached successfully!
+
+# 再度マイグレーションを実行
+% php artisan migrate
+
+Migration table created successfully.
+Migrating: 2014_10_12_000000_create_users_table
+Migrated:  2014_10_12_000000_create_users_table (75.91ms)
+Migrating: 2014_10_12_100000_create_password_resets_table
+Migrated:  2014_10_12_100000_create_password_resets_table (63.72ms)
+Migrating: 2019_08_19_000000_create_failed_jobs_table
+Migrated:  2019_08_19_000000_create_failed_jobs_table (68.31ms)
+Migrating: 2021_06_16_021409_create_articles_table
+Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
+```
+今度は正常にマイグレーションを行えた。</br>
+*このエラーの内容はqiita(https://qiita.com/BugGreedy/items/f7e1743a26e9465b7350) にて記載。</br>
+</br>
+
+あらためてphpMyAdminの`mybbs`テーブルを確認したところ、migrationに設定した`artilesテーブル`と各カラム(id,content,created_at,updated_at)ができている。</br>
+ここでサンプルデータを登録する。</br>
+`挿入`タブを選択肢、`3行ずつ

@@ -1,4 +1,4 @@
-## Laravel入門編1: Laravelの基本を理解しよう
+## Laravel入門編1: Laravelの基本を理解しよう(全9回)
 
 ### 目次
 [1-1_Laravelの基本を理解しよう](#1-1_Laravelの基本を理解しよう)</br>
@@ -413,4 +413,12 @@ Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
 
 あらためてphpMyAdminの`mybbs`テーブルを確認したところ、migrationに設定した`artilesテーブル`と各カラム(id,content,created_at,updated_at)ができている。</br>
 ここでサンプルデータを登録する。</br>
-`挿入`タブを選択肢、`3行ずつ
+`挿入`タブを選択し、`3行ずつ挿入する`を選択。各contentsカラムにメッセージを記入し実行。</br>
+`表示`タブをクリックし、今挿入したレコードが登録されていればOK。</br>
+</br>
+
+***
+</br>
+
+### 1-6_
+

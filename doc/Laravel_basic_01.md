@@ -133,9 +133,23 @@ Starting Laravel development server: http://127.0.0.1:8000
   - 編集画面(edit.blade.php)</br>
   </br>
 
-  **備考:Blade**[参考](https://qiita.com/yukibe/items/86ccd3f72ecf943825a6)</br>
-   BladeはシンプルながらパワフルなLaravelのテンプレートエンジンです。他の人気のあるPHPテンプレートエンジンとは異なり、ビューの中にPHPを直接記述することを許しています。全BladeビューはPHPへコンパイルされ、変更があるまでキャッシュされます。つまりアプリケーションのオーバーヘッドは基本的に０です。Bladeビューには.blade.phpファイル拡張子を付け、通常はresources/viewsディレクトリの中に設置します。</br>
+  **備考:Blade**[(参考:【Laravel入門】ビューとBladeと継承)](https://qiita.com/yukibe/items/86ccd3f72ecf943825a6)</br>
+  BladeはシンプルながらパワフルなLaravelのテンプレートエンジンです。他の人気のあるPHPテンプレートエンジンとは異なり、ビューの中にPHPを直接記述することを許しています。全BladeビューはPHPへコンパイルされ、変更があるまでキャッシュされます。つまりアプリケーションのオーバーヘッドは基本的に０です。Bladeビューには.blade.phpファイル拡張子を付け、通常はresources/viewsディレクトリの中に設置します。</br>
+  つまり</br>
+  - Laravelのビュー作成にはBladeテンプレートエンジンが使われ、結果Bladeビューとなる。
+  - **ビューの中にPHPが直接記述できる。**
+  - Laravelのビューはresources/viewsディレクトリにある。
+  - 拡張子は.blade.phpとなる。</br>
 </br>
+
+ページ遷移図/ルーティングはこんな感じ</br>
+![](/img/1phraseBBS_page.png)</br>
+![](/img/1phraseBBS_rooting.png)</br>
+</br>
+
+
+
+
 
 
 

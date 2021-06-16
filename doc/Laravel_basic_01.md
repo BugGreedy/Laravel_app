@@ -4,7 +4,7 @@
 [1-1_Laravelの基本を理解しよう](#1-1_Laravelの基本を理解しよう)</br>
 [1-2_アプリケーションを用意しよう](#1-2_アプリケーションを用意しよう)</br>
 [1-3_LaravelでHelloWorld](#1-3_LaravelでHelloWorld)</br>
-[1-4_1行掲示板を作ろう](#1-4_1行掲示板を作ろう)</br>
+[1-4_1行掲示板を作ろう](#1行掲示板を作ろう)</br>
 
 </br>
 
@@ -126,6 +126,16 @@ Starting Laravel development server: http://127.0.0.1:8000
 </br>
 
 ### 1-4_1行掲示板を作ろう
+ページの構成は下記のとおり。</br>
+* 記事一覧ページ(index.blade.php)</br>
+  - 詳細ページ(show.blade.php)
+  - 新規画面(new.blade.php)
+  - 編集画面(edit.blade.php)</br>
+  </br>
+  **備考:Blade**</br>
+  - BladeはシンプルながらパワフルなLaravelのテンプレートエンジンです。他の人気のあるPHPテンプレートエンジンとは異なり、ビューの中にPHPを直接記述することを許しています。全BladeビューはPHPへコンパイルされ、変更があるまでキャッシュされます。つまりアプリケーションのオーバーヘッドは基本的に０です。Bladeビューには.blade.phpファイル拡張子を付け、通常はresources/viewsディレクトリの中に設置します。
+</br>
+
 
 
 

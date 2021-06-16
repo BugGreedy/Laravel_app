@@ -181,4 +181,169 @@ DB_USERNAME=root # rootになってない場合はrootにする。
 </br>
 
 ### 1-5_モデルとコントローラを用意する
+PHPオブジェクトとしてDBのレコードを操作するためにモデルを作成する。</br>
+Laravelではモデルを自動生成できる。</br>
+モデルの作成と同時にその設定である**マイグレーションファイル**と**コントローラー**も作成される。</br>
+テーブル名は`Articles`と複数形で表すが、モデルは`Article`と単数形で表す。</br>
+```shell
+$ php artisan make:model Article -m -c -r
+Model created successfully.
+Created Migration: 2021_06_16_021409_create_articles_table
+Controller created successfully.
+```
+実行後、`/app/Models`内に`Article.php`というファイルが作成されている。これがArticleモデルである。</br>
+```php
+// Article.php
+<?php
 
+namespace App\Models;
+
+// 作成段階でEloquent(ORマッパー)を読み込んでいる。
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Article extends Model
+{
+    use HasFactory;
+}
+```
+</br>
+
+また、`/Http/Controllers`に`ArticleController.php`というコントローラーが作成されている。</br>
+ここにアプリケーションの動作に合わせて記述を行う。</br>
+```php
+// ArticleController.php
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Article;
+use Illuminate\Http\Request;
+
+class ArticleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        //
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Article $article)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Article $article)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Article $article)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Models\Article  $article
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Article $article)
+    {
+        //
+    }
+}
+```
+</br>
+
+また、`/database/migrations`内に`2021_06_16_021409_create_articles_table.php`というマイグレーションファイルが作成されている。</br>
+こちらに今回使用するテーブルの情報を追加する。
+```php
+// 2021_06_16_021409_create_articles_table.php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateArticlesTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('articles', function (Blueprint $table) {
+            // $table->id(); 下記に変更
+            $table->increments('id');
+            // 下記を追記
+            $table->string('content');
+            
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('articles');
+    }
+}
+
+```
+それでは編集したマイグレーションファイルを実行しよう。
+```shell
+$ php artisan migrate
+
+```

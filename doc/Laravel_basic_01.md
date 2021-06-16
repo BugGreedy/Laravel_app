@@ -5,6 +5,7 @@
 [1-2_アプリケーションを用意しよう](#1-2_アプリケーションを用意しよう)</br>
 [1-3_LaravelでHelloWorld](#1-3_LaravelでHelloWorld)</br>
 [1-4_1行掲示板を作ろう](#1-4_1行掲示板を作ろう)</br>
+[1-5_モデルとコントローラを用意する](#1-5_モデルとコントローラを用意する)</br>
 
 </br>
 
@@ -142,15 +143,42 @@ Starting Laravel development server: http://127.0.0.1:8000
   - 拡張子は.blade.phpとなる。</br>
 </br>
 
-ページ遷移図/ルーティングはこんな感じ</br>
-![](/img/1phraseBBS_page.png)</br>
-![](/img/1phraseBBS_rooting.png)</br>
+* ページ遷移図</br>
+  ![](/img/1phraseBBS_page.png)</br>
 </br>
 
+* ルーティング</br>
+  ![](/img/1phraseBBS_rooting.png)</br>
+</br>
 
+* DBの構成
+  - データベース：mybbs
+  - テーブル：articles
+  - カラム：id,content,created_at,updated_at</br>
+</br>
 
+それではDBを作成していく。</br>
+phpMyAdminにて`mybbs`という名前のDBを作成。照合順序はいつもどおり`utf8_general_ci`。(DBで日本語を扱うため)</br>
+とりあえず作成だけで良い。テーブルかカラムは次のチャプターで設定。</br>
+</br>
 
+次にアプリケーションがこのDBを読み込むようにLaravelで設定する。</br>
+これは隠しファイルになっている`.env`という環境設定ファイルにて設定する。</br>
+bbsディレクトリ内の`.env`を開く。</br>
+```s
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=mybbs # 自分の使用するDB名にする
+DB_USERNAME=root # rootになってない場合はrootにする。
+# 下記をコメントアウトする
+# DB_PASSWORD=
+略
+```
+</br>
 
+***
+</br>
 
-
+### 1-5_モデルとコントローラを用意する
 

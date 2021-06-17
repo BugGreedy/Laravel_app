@@ -6,12 +6,12 @@
 [1-3_LaravelでHelloWorld](#1-3_LaravelでHelloWorld)</br>
 [1-4_1行掲示板を作ろう](#1-4_1行掲示板を作ろう)</br>
 [1-5_モデルとコントローラを用意する](#1-5_モデルとコントローラを用意する)</br>
-[※ エラー対処1(マイグレーションできない)](#エラー対処1(マイグレーションできない))</br>
+[※ エラー対処1_マイグレーションできない](#エラー対処1_マイグレーションできない)</br>
 [1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)</br>
 [1-7_コントローラとビューを作成しよう](#1-7_コントローラとビューを作成しよう)</br>
 [1-8_記事一覧を作成しよう](#1-8_記事一覧を作成しよう)</br>
 [1-9_詳細画面を作ろう](#1-9_詳細画面を作ろう)</br>
-[※ エラー対処2(httpが強制的にhttpsになる)](#エラー対処2(httpが強制的にhttpsになる))</br>
+[※ エラー対処2_httpが強制的にhttpsになる](#エラー対処2_httpが強制的にhttpsになる)</br>
 </br>
 
 ***
@@ -347,7 +347,7 @@ class CreateArticlesTable extends Migration
 ```
 それでは編集したマイグレーションファイルを実行しよう。
 
-#### エラー対処1(マイグレーションできない)
+#### エラー対処1_マイグレーションできない
 > ```shell
 > $ php artisan migrate
 > # しかし、エラーで正常に実行できず
@@ -743,7 +743,7 @@ public function show(Request $request, $id, Article $article)
 ```
 </br>
 
-#### エラー対処2(httpが強制的にhttpsになる)
+#### エラー対処2_httpが強制的にhttpsになる
 > ここで動作確認を行ったところ、リンク先に飛べずにエラーがおきる。
 > ```shell:ターミナル
 > [Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Invalid request (Unsupported SSL request)
@@ -767,7 +767,7 @@ public function show(Request $request, $id, Article $article)
 >        // 下記を追記
 >        // \URL::forceScheme('https');
 >        // さらに追記
->        \URL::forceScheme('http'); //https → httpにした
+>        \URL::forceScheme('https'); //https → httpにした
 >        // 後から捕捉
 >    }
 > ```

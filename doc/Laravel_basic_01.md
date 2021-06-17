@@ -557,7 +557,39 @@ class ArticleController extends Controller
 </html>
 ```
 ここで動作確認のため(http://localhost:8000/articles) にアクセスしてみたところ</br>
-`Target class [ArticleController] does not exist.`
+`Target class [ArticleController] does not exist.`と表示されてしまった。</br>
+この原因はLaravelのバージョンの違いによるので一部のコードの変更によるものらしい。</br>
+カリキュラムは以前のバージョンを使用しているためこのエラーは生じていない。</br>
+現在のバージョン(8.~)で対応できるよう試行した。</br>
+</br>
+
+> [参考：Laravel8を試したら即効でエラー「Target class [〇〇〇Controller] does not exist.」が表示された - Qiita](https://qiita.com/tamakiiii/items/e71040173fa0a1fcad83)</br>
+上記の記事に記載してあった1つめの対策を実行。</br>
+`bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。
+```php
+    protected $namespace = 'App\Http\Controllers'; //追加
+    public function boot()
+    {
+        $this->configureRateLimiting();
+
+        $this->routes(function () {
+            Route::prefix('api')
+                ->middleware('api')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->namespace($this->namespace)
+                ->group(base_path('routes/web.php'));
+        });
+    }
+```
+これで(http://localhost:8000/articles) にアクセスした際、正常に表示されるようになった。</br>
+また、上記より先に2つめの方法(ルーティングのコントローラーを絶対パスで指定する)を試行したがこれだけではエラーが解決しなかった。</br>
+</br>
+
+
+
 
 
 

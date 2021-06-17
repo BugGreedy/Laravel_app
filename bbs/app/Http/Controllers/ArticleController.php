@@ -14,7 +14,10 @@ class ArticleController extends Controller
      */
     public function index()
     {
-        return view('index');
+        $message = 'Welcome to My BBS';
+        // 下記を追記
+        $articles = Article::all();
+        return view('index',['message' => $message], ['articles' => $articles]);
     }
 
     /**

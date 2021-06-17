@@ -8,6 +8,7 @@
 [1-5_モデルとコントローラを用意する](#1-5_モデルとコントローラを用意する)</br>
 [1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)</br>
 [1-7_コントローラとビューを作成しよう](#1-7_コントローラとビューを作成しよう)</br>
+[1-8_記事一覧を作成しよう](#1-8_記事一覧を作成しよう)</br>
 
 </br>
 
@@ -588,8 +589,87 @@ class ArticleController extends Controller
 また、上記より先に2つめの方法(ルーティングのコントローラーを絶対パスで指定する)を試行したがこれだけではエラーが解決しなかった。</br>
 </br>
 
+次にコントローラーからビューにデータを渡してみる。</br>
+`bbs/app/Http/Controllers/ArticleController.php`を編集。
+```php
+class ArticleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // 下記を編集
+        $message = 'Welcome to My BBS';
+        return view('index',['message' => $message]);
+    }
+```
+次にビュー`bbs/resources/views/index.blade.php`を編集する。
+```php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+    <!-- 下記を追記 -->
+    <p>{{ $message }}</P>
+  </body>
+</html>
+```
+これで追加したメッセージを表示できるようになる。</br>
+このように`{{ 変数 }}`(2重ブラケットで囲む)すると変数を表示できる。</br>
+</br>
 
+***
+</br>
 
+### 1-8_記事一覧を作成しよう
+一覧表示ページを作っていく。</br>
+一覧を表示するためにコントローラーにレコード全てを取り出す記述を行う。
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+    public function index()
+    {
+        $message = 'Welcome to My BBS';
+        // 下記を追記
+        $articles = Article::all();
+        return view('index',['message' => $message],['articles' => $articles]);
+    }
+```
+次にこの取り出したデータ一覧を表示するためにビューを編集する。
+```php
+// bbs/resources/views/index.blade.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+    <p>{{ $message }}</P>
+    <!-- 下記を追記 -->
+    @foreach ($articles as $article)
+      <p>{{ $article->content}}</p>
+    @endforeach
+  </body>
+</html>
+```
+これでデータ一覧をindexに表示できるようになった。</br>
+ここでは`@foreach ~ @endforeach`のように記述する事でループ文を使用できる。</br>
+</br>
+
+***
+</br>
+
+### 1-9_
 
 
 

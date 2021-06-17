@@ -7,6 +7,10 @@
   </head>
   <body>
     <h1>mogura bbs</h1>
+    <p>{{ $message }}</P>
+    <!-- 下記を追記 -->
+    @foreach ($articles as $article)
+      <p>{{ $article->content}}</p>
+    @endforeach
   </body>
-
 </html>

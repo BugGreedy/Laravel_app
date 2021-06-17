@@ -348,73 +348,73 @@ class CreateArticlesTable extends Migration
 それでは編集したマイグレーションファイルを実行しよう。
 
 #### エラー対処1(マイグレーションできない)
-```shell
-$ php artisan migrate
-# しかし、エラーで正常に実行できず
- Illuminate\Database\QueryException 
-
-  SQLSTATE[HY000] [1049] Unknown database 'mybbs' (SQL: select * from information_schema.tables where table_schema = mybbs and table_name = migrations and table_type = 'BASE TABLE')
-
-  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:692
-    688▕         // If an exception occurs when attempting to run a query, we'll format the error
-    689▕         // message to include the bindings with SQL, which will make this exception a
-    690▕         // lot more helpful to the developer instead of just the database's errors.
-    691▕         catch (Exception $e) {
-  ➜ 692▕             throw new QueryException(
-    693▕                 $query, $this->prepareBindings($bindings), $e
-    694▕             );
-    695▕         }
-    696▕ 
-
-      +33 vendor frames 
-  34  artisan:37
-      Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
-```
-</br>
-
-エラーが発生したため`.env`の内容を下記に訂正。
-```s
-// .env
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=mydbs
-DB_USERNAME=root
-# DB_PASSWORD=
-
-↓
-
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=8889
-DB_DATABASE=mybbs
-DB_USERNAME=root
-DB_PASSWORD=root
-```
-書き換え後に実行
-```shell
-# 一度キャッシュをクリア
-% php artisan config:cache
-
-Configuration cache cleared!
-Configuration cached successfully!
-
-# 再度マイグレーションを実行
-% php artisan migrate
-
-Migration table created successfully.
-Migrating: 2014_10_12_000000_create_users_table
-Migrated:  2014_10_12_000000_create_users_table (75.91ms)
-Migrating: 2014_10_12_100000_create_password_resets_table
-Migrated:  2014_10_12_100000_create_password_resets_table (63.72ms)
-Migrating: 2019_08_19_000000_create_failed_jobs_table
-Migrated:  2019_08_19_000000_create_failed_jobs_table (68.31ms)
-Migrating: 2021_06_16_021409_create_articles_table
-Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
-```
-今度は正常にマイグレーションを行えた。</br>
-*このエラーの内容はqiita(https://qiita.com/BugGreedy/items/f7e1743a26e9465b7350) にて記載。</br>
-</br>
+> ```shell
+> $ php artisan migrate
+> # しかし、エラーで正常に実行できず
+>  Illuminate\Database\QueryException 
+> 
+>   SQLSTATE[HY000] [1049] Unknown database 'mybbs' (SQL: select * from information_schema.tables where table_schema = mybbs and table_name = migrations and table_type = 'BASE TABLE')
+> 
+>   at vendor/laravel/framework/src/Illuminate/Database/Connection.php:692
+>     688▕         // If an exception occurs when attempting to run a query, we'll format the error
+>     689▕         // message to include the bindings with SQL, which will make this exception a
+>     690▕         // lot more helpful to the developer instead of just the database's errors.
+>     691▕         catch (Exception $e) {
+>   ➜ 692▕             throw new QueryException(
+>     693▕                 $query, $this->prepareBindings($bindings), $e
+>     694▕             );
+>     695▕         }
+>     696▕ 
+> 
+>       +33 vendor frames 
+>   34  artisan:37
+>       Illuminate\Foundation\Console\Kernel::handle(Object(Symfony\Component\Console\Input\ArgvInput), Object(Symfony\Component\Console\Output\ConsoleOutput))
+> ```
+> </br>
+> 
+> エラーが発生したため`.env`の内容を下記に訂正。
+> ```s
+> // .env
+> DB_CONNECTION=mysql
+> DB_HOST=127.0.0.1
+> DB_PORT=3306
+> DB_DATABASE=mydbs
+> DB_USERNAME=root
+> # DB_PASSWORD=
+> 
+> ↓
+> 
+> DB_CONNECTION=mysql
+> DB_HOST=127.0.0.1
+> DB_PORT=8889
+> DB_DATABASE=mybbs
+> DB_USERNAME=root
+> DB_PASSWORD=root
+> ```
+> 書き換え後に実行
+> ```shell
+> # 一度キャッシュをクリア
+> % php artisan config:cache
+> 
+> Configuration cache cleared!
+> Configuration cached successfully!
+> 
+> # 再度マイグレーションを実行
+> % php artisan migrate
+> 
+> Migration table created successfully.
+> Migrating: 2014_10_12_000000_create_users_table
+> Migrated:  2014_10_12_000000_create_users_table (75.91ms)
+> Migrating: 2014_10_12_100000_create_password_resets_table
+> Migrated:  2014_10_12_100000_create_password_resets_table (63.72ms)
+> Migrating: 2019_08_19_000000_create_failed_jobs_table
+> Migrated:  2019_08_19_000000_create_failed_jobs_table (68.31ms)
+> Migrating: 2021_06_16_021409_create_articles_table
+> Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
+> ```
+> 今度は正常にマイグレーションを行えた。</br>
+> *このエラーの内容はqiita(https://qiita.com/BugGreedy/items/f7e1743a26e9465b7350) にて記載。</br>
+> </br>
 
 あらためてphpMyAdminの`mybbs`テーブルを確認したところ、migrationに設定した`artilesテーブル`と各カラム(id,content,created_at,updated_at)ができている。</br>
 ここでサンプルデータを登録する。</br>
@@ -507,10 +507,14 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         // 下記を追記
-        \URL::forceScheme('https');
+        // \URL::forceScheme('https');
+        // さらに追記
+        \URL::forceScheme('http'); //https → httpにした
+        // 後から捕捉
     }
 }
 ```
+捕捉内容については→[エラー対処2(httpが強制的にhttpsになる)](#エラー対処2(httpが強制的にhttpsになる))
 </br>
 
 ***
@@ -740,15 +744,32 @@ public function show(Request $request, $id, Article $article)
 </br>
 
 #### エラー対処2(httpが強制的にhttpsになる)
-ここで動作確認を行ったところ、飛べずにエラーがおきる。
-```shell:ターミナル
-[Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Invalid request (Unsupported SSL request)
-[Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Closing
-```
-とされアクセスが遮断される。(このサイトにアクセスできません、と表示される。)</br>
-</br>
-
-原因を調べたところ、リンクをクリックした際に強制的にhttpsリクエストにされている事に起因しているようだ。</br>
-httpリクエストの場合は正常に作動し、httpsリクエストを行った場合は`Invalid Request`となり接続されない。</br>
+> ここで動作確認を行ったところ、リンク先に飛べずにエラーがおきる。
+> ```shell:ターミナル
+> [Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Invalid request (Unsupported SSL request)
+> [Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Closing
+> ```
+> とされアクセスが遮断される。(このサイトにアクセスできません、と表示される。)</br>
+> </br>
+> 
+> 原因を調べたところ、リンクをクリックした際に強制的にhttpsリクエストにされている事に起因しているようだ。</br>
+> httpリクエストの場合は正常に作動し、httpsリクエストを行った場合は`Invalid Request`となり接続されない。</br>
+> [参考](https://www.fixes.pub/program/248195.html)</br>
+> </br>
+> 
+> * 行った対処
+> カリキュラムの[1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)の最後にて設定した`bbs/app/Providers/AppServiceProvider.php`の記載を変更。</br>
+> ここでhttpsリクエストになるように設定している。</br>
+> ※通常のwebではhttpsにして安全性を上げる必要がある。
+> ```php
+>     public function boot()
+>    {
+>        // 下記を追記
+>        // \URL::forceScheme('https');
+>        // さらに追記
+>        \URL::forceScheme('http'); //https → httpにした
+>        // 後から捕捉
+>    }
+> ```
 
 

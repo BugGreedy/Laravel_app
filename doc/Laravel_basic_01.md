@@ -754,7 +754,7 @@ public function show(Request $request, $id, Article $article)
 > 
 > 原因を調べたところ、リンクをクリックした際に強制的にhttpsリクエストにされている事に起因しているようだ。</br>
 > httpリクエストの場合は正常に作動し、httpsリクエストを行った場合は`Invalid Request`となり接続されない。</br>
-> [参考](https://www.fixes.pub/program/248195.html)</br>
+> [参考:無効なリクエスト（サポートされていないSSLリクエスト）を修正する方法](https://www.fixes.pub/program/248195.html)</br>
 > </br>
 > 
 > * 行った対処

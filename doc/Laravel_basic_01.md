@@ -556,7 +556,7 @@ class ArticleController extends Controller
   </body>
 </html>
 ```
-ここで動作確認のため(http://localhost:8000/articles)にアクセスしてみたところ</br>
+ここで動作確認のため(http://localhost:8000/articles) にアクセスしてみたところ</br>
 `Target class [ArticleController] does not exist.`
 
 

@@ -7,6 +7,7 @@
 [1-4_1行掲示板を作ろう](#1-4_1行掲示板を作ろう)</br>
 [1-5_モデルとコントローラを用意する](#1-5_モデルとコントローラを用意する)</br>
 [1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)</br>
+[1-7_コントローラとビューを作成しよう](#1-7_コントローラとビューを作成しよう)</br>
 
 </br>
 
@@ -59,11 +60,9 @@ Web掲示板を作成する中で、Webアプリケーションの基本的な�
 </br>
 
 ### 1-2_アプリケーションを用意しよう
-ターミナルで`public_html`というディレクトリを作成後、`bbs`というプロジェクト(ディレクトリ)を作成する。</br>
+任意のディレクトリ内に`bbs`というプロジェクト(ディレクトリ)を作成する。</br>
 Laravelのインストールについては[こちら](/doc/Laravel_install_00.md)を参照。</br>
-```bash
-$ mkdir public_html
-$ cd public_html
+```shell
 $ laravel new bbs
 # 今回は学習もかねてcomposerコマンドの方で実行した。
 # $ composer create-project laravel/laravel プロジェクト名 --prefer-dist
@@ -80,7 +79,7 @@ Laravel Framework 8.46.0
 それでは動作確認を行う。</br>
 Laravelの管理コマンドを呼び出してサーバーを起動する。</br>
 
-```bash
+```shell
 $ php artisan serve
 # 下記のように表示される
 Starting Laravel development server: http://127.0.0.1:8000
@@ -115,7 +114,7 @@ Starting Laravel development server: http://127.0.0.1:8000
 備考：(localhost:8000/)
 に接続して出てくるLaravelの画面(下記参照)はデフォルトで用意されている画像である。</br>
 ![on_Laravel](/img/Laravel.png)</br>
-場所は`/resources/views/welcome.blade.php/`である。</br>
+場所は`/bbs/resources/views/welcome.blade.php/`である。</br>
 それではこのWelcomeページを編集してみる。</br>
 
 ```html
@@ -192,7 +191,7 @@ Model created successfully.
 Created Migration: 2021_06_16_021409_create_articles_table
 Controller created successfully.
 ```
-実行後、`/app/Models`内に`Article.php`というファイルが作成されている。これがArticleモデルである。</br>
+実行後、`/bbs/app/Models`内に`Article.php`というファイルが作成されている。これがArticleモデルである。</br>
 ```php
 // Article.php
 <?php
@@ -210,7 +209,7 @@ class Article extends Model
 ```
 </br>
 
-また、`/Http/Controllers`に`ArticleController.php`というコントローラーが作成されている。</br>
+また、`/bbs/Http/Controllers`に`ArticleController.php`というコントローラーが作成されている。</br>
 ここにアプリケーションの動作に合わせて記述を行う。</br>
 ```php
 // ArticleController.php
@@ -302,7 +301,7 @@ class ArticleController extends Controller
 ```
 </br>
 
-また、`/database/migrations`内に`2021_06_16_021409_create_articles_table.php`というマイグレーションファイルが作成されている。</br>
+また、`/bbs/database/migrations`内に`2021_06_16_021409_create_articles_table.php`というマイグレーションファイルが作成されている。</br>
 こちらに今回使用するテーブルの情報を追加する。
 ```php
 // 2021_06_16_021409_create_articles_table.php
@@ -429,7 +428,137 @@ Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
 * 一行掲示板のルーティング
   | ルート | メソッド | 関数 | 表示するページ |
   | - | - | - | - |
-  | / | GET | - | BBS-mogura |
-  | /articles | GET | index() | 一覧画面 |
+  | `/` | GET | - | BBS-mogura |
+  | `/articles` | GET | index() | 一覧画面 |
   | `/article/<id>` | GET | show() | 詳細画面 |
-  </br>
+</br>
+
+
+まず現在のルーティングを確認する。</br>
+`/bbs/routes/web.php`を確認。
+その下部に追加するルート(ルーティングの定義)を記述する。
+```php
+<?php
+
+use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+// 下記を追記
+// 下記は①記事一覧のルート
+Route::get('/articles','ArticleController@index')->name('article.list');
+// 下記は記事詳細のルート
+Route::get('/article/id','ArticleController@show')->name('article.show');
+```
+</br>
+
+**ルーティングの記述について</br>
+**`Route::get('ルート','コントローラー@メソッド')->name('リンク');`**</br>
+例：①記事一覧のルートについて</br>
+`Route::get('/articles','ArticleController@index')->name('article.list');`</br>
+`/articles`にアクセスしたとき、ArticleControllerのindexメソッドを呼び出す。</br>
+また`->name('article.list')`とname付けしているのでP¥`article.list`というリンクを貼る事ができるようになる。</br>
+</br>
+
+次に当環境でhttpsを使うようにアプリケーションの全体設定を編集する。</br>
+`/bbs/app/Providers/AppServiceProvider.php`を開き、下記の記述を追加する。</br>
+```php
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        // 下記を追記
+        \URL::forceScheme('https');
+    }
+}
+```
+</br>
+
+***
+</br>
+
+### 1-7_コントローラとビューを作成しよう
+前回はルーティングの設定を行った。ここにコントローラーとビューを追加すればブラウザからのアクセスでページを表示できるようになる。</br>
+</br>
+まずコントローラ(`/bbs/app/Http/Controllers/ArticleController.php)に記述を追加する。</br>
+
+```php
+// 一部抜粋 
+class ArticleController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        // 下記を追加
+        return view('index');
+    }
+```
+これでコントローラーのindexメソッドが追加できた。</br>
+ここでは`index`という名前のビューを呼び出すだけの仕組みになっている。</br>
+続いてビューを作成する。</br>
+</br>
+
+**ビューとは**</br>
+- アプリケーションの見た目を設定する機能。
+- LaravelではBladeというテンプレートエンジンを用いている。[Bladeについては以前の章を参照](#1-4_1行掲示板を作ろう)</br>
+
+ではビューを作成していこう。</br>
+`bbs/resources/views`に`index.blade.php`というファイルを作成し、次のように記述する。
+
+```php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+  </body>
+</html>
+```
+ここで動作確認のため(http://localhost:8000/articles)にアクセスしてみたところ</br>
+`Target class [ArticleController] does not exist.`
+
+
+
+

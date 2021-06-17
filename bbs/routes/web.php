@@ -16,3 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// 下記を追記
+// 下記は①記事一覧のルート
+Route::get('/articles','ArticleController@index')->name('article.list');
+
+// 下記は記事詳細のルート
+Route::get('/article/id','ArticleController@show')->name('article.show');

@@ -431,5 +431,5 @@ Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
   | - | - | - | - |
   | / | GET | - | BBS-mogura |
   | /articles | GET | index() | 一覧画面 |
-  | /article/<id> | GET | show() | 詳細画面 |
+  | `/article/<id>` | GET | show() | 詳細画面 |
   </br>

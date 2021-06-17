@@ -25,4 +25,4 @@ Route::get('/articles','ArticleController@index')->name('article.list');
 
 
 // 下記は記事詳細のルート
-Route::get('/article/id','ArticleController@show')->name('article.show');
+Route::get('/article/{id}','ArticleController@show')->name('article.show');

@@ -6,10 +6,12 @@
 [1-3_LaravelでHelloWorld](#1-3_LaravelでHelloWorld)</br>
 [1-4_1行掲示板を作ろう](#1-4_1行掲示板を作ろう)</br>
 [1-5_モデルとコントローラを用意する](#1-5_モデルとコントローラを用意する)</br>
+[※ エラー対処1(マイグレーションできない)](#エラー対処1(マイグレーションできない))</br>
 [1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)</br>
 [1-7_コントローラとビューを作成しよう](#1-7_コントローラとビューを作成しよう)</br>
 [1-8_記事一覧を作成しよう](#1-8_記事一覧を作成しよう)</br>
-
+[1-9_詳細画面を作ろう](#1-9_詳細画面を作ろう)</br>
+[※ エラー対処2(httpが強制的にhttpsになる)](#エラー対処2(httpが強制的にhttpsになる))</br>
 </br>
 
 ***
@@ -344,6 +346,8 @@ class CreateArticlesTable extends Migration
 
 ```
 それでは編集したマイグレーションファイルを実行しよう。
+
+#### エラー対処1(マイグレーションできない)
 ```shell
 $ php artisan migrate
 # しかし、エラーで正常に実行できず
@@ -431,7 +435,7 @@ Migrated:  2021_06_16_021409_create_articles_table (32.20ms)
   | - | - | - | - |
   | `/` | GET | - | BBS-mogura |
   | `/articles` | GET | index() | 一覧画面 |
-  | `/article/<id>` | GET | show() | 詳細画面 |
+  | `/article/{id} | GET | show() | 詳細画面 |
 </br>
 
 
@@ -462,7 +466,7 @@ Route::get('/', function () {
 // 下記は①記事一覧のルート
 Route::get('/articles','ArticleController@index')->name('article.list');
 // 下記は記事詳細のルート
-Route::get('/article/id','ArticleController@show')->name('article.show');
+Route::get('/article/{id}','ArticleController@show')->name('article.show');
 ```
 </br>
 
@@ -669,8 +673,82 @@ class ArticleController extends Controller
 ***
 </br>
 
-### 1-9_
+### 1-9_詳細画面を作ろう
+掲示板の一つの記事を取り出して表示する詳細ページを作成する。</br>
+詳細画面のルーティングはルーティング作成時に記述済みである。</br>
+```php
+// bbs/routes/web.php
+Route::get('/article/{id}','ArticleController@show')->name('article.show');
+```
+ここに設定されてあるshowメソッドをコントローラに記述していく。</br>
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function show(Request $request, $id, Article $article)
+{
+    $message = 'This is your article' . $id;
+    $article = Article::find($id);
+    return view('show',['message'=>$message,'article'=>$article]);
+}
+```
+ビュー(`show.blade.php`)を作成し、下記のように編集する。
+```php
+// bbs/resources/views/show.blade.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+    <p>{{ $message }}</P>
+    <p>{{ $article->content }}</P>
+    
+    <p>
+      <a href={{route('article.list') }}>一覧に戻る</a>
+    </p>
+  </body>
+</html>
+```
+これで(http://localhost:8000/article/1) にアクセスした際に詳細ページにアクセスできるようになった。</br>
+</br>
 
+次に一覧から詳細に飛べるようにindexにリンクを設置する。
+```php
+// bbs/resources/views/index.blade.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+    <p>{{ $message }}</P>
+    <!-- 下記を追記 -->
+    @foreach ($articles as $article)
+      <p>
+        <a href='{{ route("article.show",["id" => $article->id]) }}'>
+        {{ $article->content}}</a>
+      </p>
+    @endforeach
+  </body>
+</html>
+```
+</br>
 
+#### エラー対処2(httpが強制的にhttpsになる)
+ここで動作確認を行ったところ、飛べずにエラーがおきる。
+```shell:ターミナル
+[Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Invalid request (Unsupported SSL request)
+[Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Closing
+```
+とされアクセスが遮断される。(このサイトにアクセスできません、と表示される。)</br>
+</br>
+
+原因を調べたところ、リンクをクリックした際に強制的にhttpsリクエストにされている事に起因しているようだ。</br>
+httpリクエストの場合は正常に作動し、httpsリクエストを行った場合は`Invalid Request`となり接続されない。</br>
 
 

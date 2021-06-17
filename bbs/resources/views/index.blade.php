@@ -10,7 +10,11 @@
     <p>{{ $message }}</P>
     <!-- 下記を追記 -->
     @foreach ($articles as $article)
-      <p>{{ $article->content}}</p>
+      <p>
+        <a href='{{ route("article.show",["id" => $article->id]) }}'>
+        {{ $article->content}}</a>
+      </p>
     @endforeach
   </body>
 </html>
+```

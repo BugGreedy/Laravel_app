@@ -1,4 +1,4 @@
-## Laravel入門編1: Laravelの基本を理解しよう(全9回)
+## Laravel入門編1:Laravelの基本を理解しよう(全9回)
 
 ### 目次
 [1-1_Laravelの基本を理解しよう](#1-1_Laravelの基本を理解しよう)</br>

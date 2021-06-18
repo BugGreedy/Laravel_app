@@ -210,3 +210,182 @@ Exit:  Goodbye
 </br>
 
 ### 2-3_マイグレーションでカラムを追加しよう
+**モデル**：レコードをオブジェクトに割り当てる。</br>
+↓</br>
+
+articlesテーブル</br>
+| id | content | name |
+| - | - | - |
+| 1 | hello world | mogura |
+| 2 | hello Laravel | moguti |
+| 3 | こんにちはLaravel | moggu |
+</br>
+
+**ORマッパー**：レコードをPHPオブジェクトとして操作する。</br>
+例：id=1のレコード
+```php
+id = 1
+content = 'hello world'
+name = 'mogura'
+```
+のような感じのPHPオブジェクトとして操作できるのが**ORマッパー**。</br>
+</br>
+
+**マイグレーションとは**</br>
+- DBの中身を一括して移行・変更する作業。
+- LaravelではDB設定ファイルを自動生成する。
+- Laravelでは自動生成でマイグレーションファイルを作成、それを編集してマイグレーション実行という流れでDBへの変更を適用する。</br>
+</br>
+
+それではマイグレーションを行ってみよう。</br>
+今回はArticlesテーブルにuser_nameカラムを追加する。</br>
+</br>
+
+Laravelでカラムを変更するには、**doctrine/dbal**というライブラリが必要。</br>
+以下はdoctrine/dbalを追加するコマンド。</br>
+備考：dbal = database abstraction layer(データベース抽象化レイヤー)
+```shell
+$ composer require doctrine/dbal
+```
+上記を実行してdoctrine/dbalを導入。</br>
+</br>
+
+ではuser_nameカラムを追加してみよう。</br>
+```shell
+% php artisan make:migration add_column_username --table=articles
+Created Migration: 2021_06_18_081113_add_column_username
+```
+これで`bbs/database/migrations/2021_06_18_081113_add_column_username.php`が作成された。</br>
+</br>
+
+**マイグレーションファイル作成について**</br>
+`% php artisan make:migration マイグレーションファイル名 --table=編集したいテーブル名`</br>
+</br>
+
+マイグレーションファイルについて</br>
+```php
+// bbs/database/migrations/2021_06_18_081113_add_column_username.php
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddColumnUsername extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()  // upメソッド
+    {
+        Schema::table('articles', function (Blueprint $table) {
+            //
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()  // downメソッド
+    {
+        Schema::table('articles', function (Blueprint $table) {
+            //
+        });
+    }
+}
+```
+**upメソッドとdownメソッド**</br>
+upメソッドはDBに追加する項目を指定し、downメソッドは削除する項目を指定する。</br>
+今回は項目を追加するのでupメソッドの箇所に記述を行う。</br>
+```php
+// bbs/database/migrations/2021_06_18_081113_add_column_username.php
+// 前後は略
+    public function up()
+    {
+        Schema::table('articles', function (Blueprint $table) {
+            //下記を追記
+            $table->string('user_name');
+        });
+    }
+```
+ここを追記したらマイグレーションを実行する。
+```shell
+% php artisan migrate
+Migrating: 2021_06_18_081113_add_column_username
+Migrated:  2021_06_18_081113_add_column_username (196.06ms)
+```
+ではtinkerを使ってテーブルの中身を確認してみよう。
+```shell
+% php artisan tinker
+Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
+>>> Article::all()
+[!] Aliasing 'Article' to 'App\Models\Article' for this Tinker session.
+=> Illuminate\Database\Eloquent\Collection {#4101
+     all: [
+       App\Models\Article {#3695
+         id: 1,
+         content: "hello world",
+         created_at: null,
+         updated_at: null,
+         user_name: "",
+       },
+       App\Models\Article {#4063
+         id: 2,
+         content: "hello Laravel",
+         created_at: null,
+         updated_at: null,
+         user_name: "",
+       },
+       App\Models\Article {#4310
+         id: 3,
+         content: "世界の皆さん こんにちは",
+         created_at: null,
+         updated_at: null,
+         user_name: "",
+       },
+       App\Models\Article {#4311
+         id: 5,
+         content: "mogura",
+         created_at: "2021-06-18 01:49:25",
+         updated_at: "2021-06-18 01:49:25",
+         user_name: "",
+       },
+     ],
+   }
+```
+カラムにuser_nameが追加されていることが確認できた。</br>
+</br>
+
+ここでuser_nameにもサンプルデータを追加しておく。
+```shell
+>>> $article = Article::find(1)
+=> App\Models\Article {#3375
+     id: 1,
+     content: "hello world",
+     created_at: null,
+     updated_at: null,
+     user_name: "",
+   }
+>>> $article->user_name = 'mogura'
+=> "mogura"
+>>> $article->save()
+=> true
+=> App\Models\Article {#3375
+     id: 1,
+     content: "hello world",
+     created_at: null,
+     updated_at: "2021-06-18 08:28:30",
+     user_name: "mogura",
+   }
+```
+これでid=1のuser_nameにサンプルデータを登録できた。</br>
+</br>
+
+***
+</br>
+
+### 2-4_

@@ -771,5 +771,6 @@ public function show(Request $request, $id, Article $article)
 >        // 後から捕捉
 >    }
 > ```
+</br>
 
-
+上記のエラー対処の結果、httpリクエストでリンクに飛べるようになった。

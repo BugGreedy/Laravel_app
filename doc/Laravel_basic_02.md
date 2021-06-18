@@ -21,5 +21,5 @@
   | ルーティング | リクエストを振り分ける |
  </br>
 
-* Laravelの動作イメージ
+* Laravelの動作イメージ</br>
   ![](/img/Laravel_MVC.png)

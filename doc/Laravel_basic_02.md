@@ -453,9 +453,9 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
   | /article/edit/`<id>` | GET | 記事の編集 | edit() |
   | /article/update/`<id>` | POST | 記事の更新 | update() |
   | /article/`<id>` | DELETE | 記事の削除 | destroy() |
-</br>
-
-要は、情報を表示するだけなら**GET**、何か情報を追加する際は**POST**を用いる。</br>
+  </br>
+  
+  要は、情報を表示するだけなら**GET**、何か情報を追加する際は**POST**を用いる。</br>
 </br>
 
 * CRUDのHTTPメソッドについてのおさらい</br>
@@ -478,7 +478,7 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
 
 - **リダイレクト**の設定</br>
   リダイレクトとはアクセス先を自動的に切り替える事。</br>
-  今回は`/`以降何も指定しない時に自動的に一覧ページへリダイレクトさせる記述を行う。
+  今回は`http://localhost:8000/`以降何も指定しない時に自動的に一覧ページへリダイレクトさせる記述を行う。
   ```php
   // bbs/routes/web.php
   Route::get('/', function () {
@@ -486,8 +486,13 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
       return redirect('/articles');
   });
   ```
+  これでhttp://localhost:8000/ にアクセスした際Welcomeページでなく一覧ページ(`/articles`)にリダイレクトされる。</br>
+</br>
 
+***
+</br>
 
+### 2-6_
 
 
 

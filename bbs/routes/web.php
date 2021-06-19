@@ -21,5 +21,8 @@ Route::get('/', function () {
 // 一覧表示
 Route::get('/articles','ArticleController@index')->name('article.list');
 
+// 新規投稿
+Route::get('/article/new','ArticleController@create')->name('article.new');
+
 // 詳細表示
 Route::get('/article/{id}','ArticleController@show')->name('article.show');

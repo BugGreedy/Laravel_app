@@ -27,7 +27,13 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //
+        //下記を追記
+        $article  = new Article();
+
+        $article->content = 'Hello BBS by create()method';
+        $article->user_name = 'moglin';
+        $article->save();
+        return redirect('/articles');
     }
 
     /**

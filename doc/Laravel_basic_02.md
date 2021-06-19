@@ -6,6 +6,7 @@
 [2-3_マイグレーションでカラムを追加しよう](#2-3_マイグレーションでカラムを追加しよう)</br>
 [2-4_モデルに追加したカラムをビューで表示しよう](#2-4_モデルに追加したカラムをビューで表示しよう)</br>
 [2-5_Laravelのルーティングを理解しよう](#2-5_Laravelのルーティングを理解しよう)</br>
+[2-6_データベースに書き込んでみよう](#2-6_データベースに書き込んでみよう)</br>
 </br>
 
 ***
@@ -485,13 +486,94 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
       return redirect('/articles');
   });
   ```
-  これでhttp://localhost:8000/ にアクセスした際Welcomeページでなく一覧ページ(`/articles`)にリダイレクトされる。</br>
+  これでhttp://localhost:8000/ にアクセスした際、Welcomeページでなく一覧ページ(`/articles`)にリダイレクトされる。</br>
 </br>
 
 ***
 </br>
 
-### 2-6_
+### 2-6_データベースに書き込んでみよう
+今回は掲示板appに投稿機能を追加する。</br>
+フォームを使わずに固定テキストや更新日時をDBに格納する。</br>
+ルーティングを`/article/new`で設定し、コントローラーで`create()`メソッドを実行する。</br>
+</br>
 
+まずはルーティングを設定。
+```php
+// bbs/routes/web.phpに下記を追加
 
+// 新規投稿
+Route::get('/article/new','ArticleController@create')->name('article.new');
+```
+次にコントローラーを編集する。
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function create()
+{
+    //下記を追記
+    $article  = new Article();
+    $article->content = 'Hello BBS by create()method';
+    $article->user_name = 'moglin';
+    $article->save();
+    return redirect('/articles');
+}
+```
+</br>
 
+ここで動作確認のために`/new`にアクセスした際、エラー画面が表示される。</br>
+エラー内容を確認すると</br>
+
+```
+ErrorException
+Attempt to read property "content" on null (View: /Applications/MAMP/htdocs/Laravel_app/bbs/resources/views/show.blade.php)
+http://localhost:8000/article/new
+```
+と記載されている。</br>
+これはルーティングの記述が原因である。
+```php
+// ※ルーティングは上から実行されていくので先に詳細ページを呼び出してしまっているためエラーが発生する。
+
+// 一覧表示
+Route::get('/articles','ArticleController@index')->name('article.list');
+
+// 詳細表示
+Route::get('/article/{id}','ArticleController@show')->name('article.show');
+
+// 新規投稿
+Route::get('/article/new','ArticleController@create')->name('article.new');
+
+↓
+
+// ※そのため順番を入れ替えて再度実行してみる。
+
+// 一覧表示
+Route::get('/articles','ArticleController@index')->name('article.list');
+
+// 新規投稿
+Route::get('/article/new','ArticleController@create')->name('article.new');
+
+// 詳細表示
+Route::get('/article/{id}','ArticleController@show')->name('article.show');
+```
+これで正常に実行できる。</br>
+</br>
+
+一覧ページから`/article/new`へのリンクを作成する。
+```php
+// bbs/resources/views/index.blade.php
+<body>
+  <h1>mogura bbs</h1>
+  <p>{{ $message }}</P>
+  @foreach ($articles as $article)
+  <p>
+    <a href='{{ route("article.show",["id" => $article->id]) }}'>
+      {{ $article->content}}, by
+    {{ $article->user_name}}</a>
+  </p>
+  @endforeach
+  <!-- 下記を追記 -->
+  <div><a href={{ route('article.new') }}>●新規投稿●</a></div>
+</body>
+```
+
+### 2-7_

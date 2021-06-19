@@ -434,3 +434,23 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
 </br>
 
 ### 2-5_Laravelのルーティングを理解しよう
+ここではLaravelのルーティングに新しいルートを追加する。</br>
+* これまでに設定したルーティング</br>
+  | URL | メソッド | 呼び出す機能 | コントローラのメソッド |
+  | - | - | - | - |
+  | / | GET | Welcomeページ |  |
+  | /articles | GET | 記事の一覧表示 | index() |
+  | /article/`<id>` | GET | 記事の個別表示 | show() |
+</br>
+
+* 今後追加するルーティング</br>
+  | URL | メソッド | 呼び出す機能 | コントローラのメソッド |
+  | - | - | - | - |
+  | /article/new | GET | 記事の新規作成 | create() |
+  | /article/ | POST | 記事の投稿 | store() |
+  | /article/edit/`<id>` | GET | 記事の編集 | edit() |
+  | /article/update/`<id>` | POST | 記事の更新 | update() |
+  | /article/`<id>` | DELETE | 記事の削除 | destroy() |
+</br>
+
+あああ

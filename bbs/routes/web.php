@@ -14,15 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    // return view('welcome');  下記に編集
+    return redirect('/articles');
 });
 
-// 下記を追記
-// 下記は①記事一覧のルート
+// 一覧表示
 Route::get('/articles','ArticleController@index')->name('article.list');
-// 下記を試してみたけどできなかった。
-// Route::get('/articles', 'app\Http\Controllers\articleController@index')->name('article.list');
 
-
-// 下記は記事詳細のルート
+// 詳細表示
 Route::get('/article/{id}','ArticleController@show')->name('article.show');

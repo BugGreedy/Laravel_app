@@ -4,6 +4,8 @@
 [2-1_データベースとルーティングを理解しよう](#2-1_データベースとルーティングを理解しよう)</br>
 [2-2_artisan_tinkerでデータベースを確認しよう](#2-2_artisan_tinkerでデータベースを確認しよう)</br>
 [2-3_マイグレーションでカラムを追加しよう](#2-3_マイグレーションでカラムを追加しよう)</br>
+[2-4_モデルに追加したカラムをビューで表示しよう](#2-4_モデルに追加したカラムをビューで表示しよう)</br>
+[2-5_Laravelのルーティングを理解しよう](#2-5_Laravelのルーティングを理解しよう)</br>
 </br>
 
 ***
@@ -453,4 +455,39 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
   | /article/`<id>` | DELETE | 記事の削除 | destroy() |
 </br>
 
-あああ
+要は、情報を表示するだけなら**GET**、何か情報を追加する際は**POST**を用いる。</br>
+</br>
+
+* CRUDのHTTPメソッドについてのおさらい</br>
+  | CRUD | 意味 | メソッド |
+  | - | - | - |
+  | Create | 作成 | POST/PUT |
+  | Read | 読み込み | GET |
+  | Update | 更新 | PUT |
+  | Delete | 削除 | DELETE |</br>
+  </br>
+  - HTTPメソッドは全部で8つ。(GET/POST/PUT/DELETE/HEAD/OPTIONS/TRACE/CONNECT)</br>
+  - GET：リソースの取得
+  - POST：リソースの追加
+  - PUT：リソースの更新
+  - DELETE：リソースの削除</br>
+</br>
+
+それではLaravelのルートを編集しよう。</br>
+</br>
+
+- **リダイレクト**の設定</br>
+  リダイレクトとはアクセス先を自動的に切り替える事。</br>
+  今回は`/`以降何も指定しない時に自動的に一覧ページへリダイレクトさせる記述を行う。
+  ```php
+  // bbs/routes/web.php
+  Route::get('/', function () {
+      // return view('welcome');  下記に編集
+      return redirect('/articles');
+  });
+  ```
+
+
+
+
+

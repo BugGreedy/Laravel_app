@@ -453,6 +453,7 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
   | /article/edit/`<id>` | GET | 記事の編集 | edit() |
   | /article/update/`<id>` | POST | 記事の更新 | update() |
   | /article/`<id>` | DELETE | 記事の削除 | destroy() |
+  
   要は、情報を表示するだけなら**GET**、何か情報を追加する際は**POST**を用いる。</br>
 </br>
 

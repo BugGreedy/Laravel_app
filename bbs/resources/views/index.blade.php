@@ -13,6 +13,7 @@
       <p>
         <a href='{{ route("article.show",["id" => $article->id]) }}'>
         {{ $article->content}}</a>
+        {{ $article->user_name}}</a>
       </p>
     @endforeach
   </body>

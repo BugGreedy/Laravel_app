@@ -388,4 +388,49 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
 ***
 </br>
 
-### 2-4_
+### 2-4_モデルに追加したカラムをビューで表示しよう
+ここでは前章で追加したuser_nameを表示してみる。</br>
+本来はコントローラーから編集を行うが、今回は下記のように`$article = Article::all();`と全ての要素を取り出しているから編集は必要ない。</br>
+```php
+// ArticleController.php
+    public function index()
+    {
+        $message = 'Welcome to My BBS';
+        // 下記を追記
+        $articles = Article::all();
+        return view('index',['message' => $message], ['articles' => $articles]);
+    }
+```
+よって、ビューのみ編集する事で表示が可能。
+```php
+// index.blade.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>mogura bbs</title>
+    <style>body {padding: 10px;}</style>
+  </head>
+  <body>
+    <h1>mogura bbs</h1>
+    <p>{{ $message }}</P>
+    <!-- 下記を追記 -->
+    @foreach ($articles as $article)
+      <p>
+        <a href='{{ route("article.show",["id" => $article->id]) }}'>
+        {{ $article->content}}</a>
+        // 下記を追加
+        {{ $article->user_name}}</a>
+      </p>
+    @endforeach
+  </body>
+</html>
+```
+これで一覧ページにユーザーネームを追加できる。
+詳細ページにも同様の追記を行う。</br>
+</br>
+
+***
+</br>
+
+### 2-5_

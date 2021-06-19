@@ -433,4 +433,4 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
 ***
 </br>
 
-### 2-5_
+### 2-5_Laravelのルーティングを理解しよう

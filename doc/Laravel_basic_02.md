@@ -7,6 +7,7 @@
 [2-4_モデルに追加したカラムをビューで表示しよう](#2-4_モデルに追加したカラムをビューで表示しよう)</br>
 [2-5_Laravelのルーティングを理解しよう](#2-5_Laravelのルーティングを理解しよう)</br>
 [2-6_データベースに書き込んでみよう](#2-6_データベースに書き込んでみよう)</br>
+[2-7_データベースから記事を削除しよう](#2-7_データベースから記事を削除しよう)</br>
 </br>
 
 ***
@@ -576,4 +577,73 @@ Route::get('/article/{id}','ArticleController@show')->name('article.show');
 </body>
 ```
 
-### 2-7_
+### 2-7_データベースから記事を削除しよう
+今回は記事を削除する機能を追加する。</br>
+ルーティングは`/article/<id>`で設定し,`DELETE`メソッドで呼び出す。そしてコントローラーで`destroy`メソッドを実行する。</br>
+**注意**：<u>ブラウザはDELETEメソッドをサポートしていない</u>ので、実際のフォームではPOSTに置き換えて、隠し属性としてDELETEを指定する。</br>
+</br>
+
+```php
+// bbs/routes/web.php 下記を追加
+
+// 記事の削除
+Route::delete('/article/{id}','ArticleController@destroy')->name('article.delete');
+```
+次にコントローラーの設定を行う。
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function destroy(Request $request, $id , Article $article)
+{
+    //下記を追記
+    $article = Article::find($id);
+    $article->delete();
+    retuen redirect('/articles');
+}
+```
+</br>
+
+今回の削除機能では通信方式でDELETEメソッドを使うため、アドレスバーでの操作で動作確認を行う事はできない。</br>
+そこで詳細ページのビューにリンクを追加して、動作確認を行う。</br>
+```php
+// bbs/resources/views/show.blade.php
+<body>
+  <h1>mogura bbs</h1>
+  <p>{{ $message }}</P>
+  <p>{{ $article->content }}</P>
+  <p>by {{ $article->user_name }}</P>
+
+  <p>
+    <a href={{ route('article.list') }}>一覧に戻る</a>
+  </p>
+
+  <div>
+    {{ Form::open(['method' => 'delete','route' => ['article.delete',$article->id]])}}
+      {{ Form::submit('削除')}}
+    {{ Form::close() }}
+  </div>
+</body>
+```
+
+このままだとフォームが使用できないので`laravelcollective/html`というライブラリを導入する。
+```shell
+% composer require composer require laravelcollective/html
+```
+これで動作確認用の削除ボタンが詳細ページに表示できる。</br>
+</br>
+
+ここで詳細ページのソースを確認してみると</br>
+```html
+  <div>
+    <form method="POST" action="http://localhost:8000/article/11" accept-charset="UTF-8"><input name="_method" type="hidden" value="DELETE"><input name="_token" type="hidden" value="4oNYjQs91CEV2tAzEGLp9GAYFTLLi9ifsSwv2uq5">
+    <input type="submit" value="削除">
+    </form>
+  </div>
+```
+というように`<form method="POST" action="http://localhost:8000/article/11" accept-charset="UTF-8"><input name="_method" type="hidden" value="DELETE">`でDELETEとメソッドをPOSTメソッドに置き換えているのがわかる。</br>
+</br>
+
+
+***
+</br>
+
+

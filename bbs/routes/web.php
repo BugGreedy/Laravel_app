@@ -26,3 +26,6 @@ Route::get('/article/new','ArticleController@create')->name('article.new');
 
 // 詳細表示
 Route::get('/article/{id}','ArticleController@show')->name('article.show');
+
+// 記事の削除
+Route::delete('/article/{id}','ArticleController@destroy')->name('article.delete');

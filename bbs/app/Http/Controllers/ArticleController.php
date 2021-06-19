@@ -91,8 +91,11 @@ class ArticleController extends Controller
      * @param  \App\Models\Article  $article
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Article $article)
+    public function destroy(Request $request, $id , Article $article)
     {
-        //
+        //下記を追記
+        $article = Article::find($id);
+        $article->delete();
+        return redirect('/articles');
     }
 }

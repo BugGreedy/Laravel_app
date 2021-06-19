@@ -453,7 +453,7 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
   | /article/edit/`<id>` | GET | 記事の編集 | edit() |
   | /article/update/`<id>` | POST | 記事の更新 | update() |
   | /article/`<id>` | DELETE | 記事の削除 | destroy() |
-  
+
   要は、情報を表示するだけなら**GET**、何か情報を追加する際は**POST**を用いる。</br>
 </br>
 
@@ -464,7 +464,7 @@ Psy Shell v0.10.8 (PHP 8.0.6 — cli) by Justin Hileman
   | Read | 読み込み | GET |
   | Update | 更新 | PUT |
   | Delete | 削除 | DELETE |</br>
-  </br>
+  
   - HTTPメソッドは全部で8つ。(GET/POST/PUT/DELETE/HEAD/OPTIONS/TRACE/CONNECT)</br>
   - GET：リソースの取得
   - POST：リソースの追加

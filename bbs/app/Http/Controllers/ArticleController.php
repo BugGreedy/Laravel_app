@@ -95,7 +95,7 @@ class ArticleController extends Controller
     {
         //下記を追記
         $article = Article::find($id);
-        $article->delete();
+        $article->delete(); 
         return redirect('/articles');
     }
 }

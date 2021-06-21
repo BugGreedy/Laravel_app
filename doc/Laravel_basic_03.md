@@ -249,3 +249,54 @@ index.blade.phpからlayout.blade.phpを作成。
 ### 3-5_検索フォームを設置しよう
 ここでは記事検索機能を追加する。そのため一覧表示画面に検索フォームを追加する。</br>
 Laravelにおける基本的なフォームの使い方を理解する。</br>
+</br>
+
+Laravelでフォームを使うために**laravelcollective/html**というライブラリを用いる。
+```shell
+% composer require "laravelcollective/html":"^5.4.0"
+# 最新版を入れる際は
+% composer require "laravelcollective/html" -w
+# "-w"は"to allow upgrades"というオプション
+
+# 導入されたライブラリを確認する
+%composer info
+```
+</br>
+
+それでは検索フォームを作成していく。</br>
+検索フォーム用のテンプレート(search.blade.php)を作成して、下記のように編集する。
+```php
+// bbs/resources/views/seaech.blade.php
+{{form::open(['method'=>'get'])}}
+  {{csrf_field()}}
+  <div class='form-group'>
+    {{ Form::label('keyword',null,['class'=>'form-control'])}}
+    {{ Form::text('keyword',null,['class'=>'form-control'])}}
+  </div>
+  <div class='form-group'>
+    {{ Form::submit('検索',['class'=>'btn btn-outline-primary'])}}
+    <a href={{ route('article.list')}}>クリア</a>
+  </div>
+{{ Form::close()}}
+```
+</br>
+
+**ファサード(facade)について**
+ファサードとはLaravelにおいてフォームを利用するために記述する**2重のブラケット{{ ~ }}**の事である。</br>
+このような部品を**Formファサード**という。</br>
+Laravelのファサードは、アプリケーションのサービスコンテナに登録したクラスに対するインターフェースを提供する。</br>
+</br>
+
+続いて、記事一覧のビューに検索フォームのテンプレートを追加する。</br>
+```php
+// bbs/resources/views/index.blade.php
+@extends('layout')
+
+@section('content')
+<h1>mogura bbs</h1>
+<p>{{ $message }}</P>
+<!-- 下記を追記 -->
+@include('search')
+
+略
+```

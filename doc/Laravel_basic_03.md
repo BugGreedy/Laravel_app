@@ -320,7 +320,7 @@ Laravelのファサードは、アプリケーションのサービスコンテ�
         if($request->filled('keyword')){
             $keyword = $request->input('keyword');
             $message = 'Welcome to my BBS:'.$keyword;
-            $article = Article::where('content','%'.$keyword.'%')->get();
+            $article = Article::where('content','like','%'.$keyword.'%')->get();
         }else{
             $message = 'Welcome to My BBS';    
              $articles = Article::all();        

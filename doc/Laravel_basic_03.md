@@ -4,6 +4,7 @@
 [3-1_投稿フォームを作成しよう](#3-1_投稿フォームを作成しよう)</br>
 [3-2_テンプレートを共通化しよう](#3-2_テンプレートを共通化しよう)</br>
 [3-3_掲示板にBootstrapを適用しよう](#3-3_掲示板にBootstrapを適用しよう)</br>
+[3ｰ4_Bootstrapでページの見栄えを整えよう](#3ｰ4_Bootstrapでページの見栄えを整えよう)</br>
 
 </br>
 
@@ -176,4 +177,73 @@ index.blade.phpからlayout.blade.phpを作成。
 ***
 </br>
 
-### 
+### 3ｰ4_Bootstrapでページの見栄えを整えよう
+まず記事一覧にテーブルのスタイルを割り当てる。</br>
+のちに投稿ボタンにもデザインを割り当てる。</br>
+</br>
+
+それではまずindexにテーブルタグを追加していく。</br>
+テーブルタグを追加してループで表示している箇所をテーブルに置き換える。</br>
+具体的にはこれまで<p>タグで表示していた箇所を<tr><td>のテーブル表示に切り替える。
+```php
+// bbs/resources/views/index.blade.php
+@extends('layout')
+
+@section('content')
+<h1>mogura bbs</h1>
+<p>{{ $message }}</P>
+
+<!-- 下記を追記 -->
+<table class='table table-striped table-hover'>
+  @foreach ($articles as $article)
+  <tr>
+    <td><a href='{{ route("article.show",["id" => $article->id]) }}'>
+      ID:{{ $article->id}}
+    </td>
+    <td>
+      {{ $article->content}}
+    </td>
+    <td>
+      {{ $article->user_name}}</a>
+    </td>
+  </tr>
+  @endforeach
+</table>
+<div><a href={{ route('article.new') }}>●新規投稿●</a></div>
+@endsection
+```
+次にボタンにデザインを割り当てる。</br>
+```php
+// bbs/resources/views/index.blade.php
+
+//下記のリンクにclass属性を追加
+略
+</table>
+<div><a href={{ route('article.new') }} class='btn btn-outline-primary'>新規投稿</a></div>
+@endsection
+```
+次に詳細ページにおいてもボタンにデザインを追加する。</br>
+```php
+// bbs/resources/views/show.blade.php
+
+// class属性を追加
+略
+  <p>
+    <a href={{ route('article.list') }} class='btn btn-outline-primary'>一覧に戻る</a>
+  </p>
+
+  <div>
+    {{ Form::open(['method' => 'delete', 'route' => ['article.delete', $article->id]]) }}
+    {{ Form::submit('削除',['class'=>'btn btn-out-secondary']) }}
+    {{ Form::close() }}
+  </div>
+@endsection
+```
+これで一覧・詳細ページにデザインを追加する事ができた。</br>
+このように各要素にclass属性を追加する事でWeb上のBootstrapテンプレートを使用する事ができる。</br>
+</br>
+
+***
+</br>
+
+### 3-5_

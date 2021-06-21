@@ -8,12 +8,12 @@
   <p>by {{ $article->user_name }}</P>
 
   <p>
-    <a href={{ route('article.list') }}>一覧に戻る</a>
+    <a href={{ route('article.list') }} class='btn btn-outline-primary'>一覧に戻る</a>
   </p>
 
   <div>
     {{ Form::open(['method' => 'delete', 'route' => ['article.delete', $article->id]]) }}
-    {{ Form::submit('削除') }}
+    {{ Form::submit('削除',['class'=>'btn btn-out-secondary']) }}
     {{ Form::close() }}
   </div>
 @endsection

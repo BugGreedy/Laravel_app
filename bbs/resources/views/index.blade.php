@@ -1,18 +1,24 @@
-<!-- 先程取り出した部分(共通部分)を削除して下記を追記 -->
 @extends('layout')
 
 @section('content')
-  <h1>mogura bbs</h1>
-  <p>{{ $message }}</P>
+<h1>mogura bbs</h1>
+<p>{{ $message }}</P>
+
+<!-- 下記を追記 -->
+<table class='table table-striped table-hover'>
   @foreach ($articles as $article)
-  <p>
-    <a href='{{ route("article.show",["id" => $article->id]) }}'>
-      ID:{{ $article->id}},
-      {{ $article->content}}, by
+  <tr>
+    <td><a href='{{ route("article.show",["id" => $article->id]) }}'>
+      ID:{{ $article->id}}
+    </td>
+    <td>
+      {{ $article->content}}
+    </td>
+    <td>
     {{ $article->user_name}}</a>
-  </p>
+    </td>
+  </tr>
   @endforeach
-  <!-- 下記を追記 -->
-  <div><a href={{ route('article.new') }}>●新規投稿●</a></div>
-<!-- 個別の終わりに下記も追記 -->
+</table>
+<div><a href={{ route('article.new') }} class='btn btn-outline-primary'>新規投稿</a></div>
 @endsection

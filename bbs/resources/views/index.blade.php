@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
+<!-- 先程取り出した部分(共通部分)を削除して下記を追記 -->
+@extends('layout')
 
-<head>
-  <meta charset='utf-8'>
-  <title>mogura bbs</title>
-  <style>
-    body {
-      padding: 10px;
-    }
-  </style>
-</head>
-
-<body>
+@section('content')
   <h1>mogura bbs</h1>
   <p>{{ $message }}</P>
   @foreach ($articles as $article)
@@ -24,6 +14,5 @@
   @endforeach
   <!-- 下記を追記 -->
   <div><a href={{ route('article.new') }}>●新規投稿●</a></div>
-</body>
-
-</html>
+<!-- 個別の終わりに下記も追記 -->
+@endsection

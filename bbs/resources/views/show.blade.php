@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html>
+@extends('layout')
 
-<head>
-  <meta charset='utf-8'>
-  <title>mogura bbs</title>
-  <style>
-    body {
-      padding: 10px;
-    }
-  </style>
-</head>
-
-<body>
+@section('content')
   <h1>mogura bbs</h1>
   <p>{{ $message }}</P>
   <p>ID:{{ $article->id }}</P>
@@ -27,6 +16,4 @@
     {{ Form::submit('削除') }}
     {{ Form::close() }}
   </div>
-</body>
-
-</html>
+@endsection

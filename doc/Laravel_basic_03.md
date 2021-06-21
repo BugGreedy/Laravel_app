@@ -5,6 +5,8 @@
 [3-2_テンプレートを共通化しよう](#3-2_テンプレートを共通化しよう)</br>
 [3-3_掲示板にBootstrapを適用しよう](#3-3_掲示板にBootstrapを適用しよう)</br>
 [3ｰ4_Bootstrapでページの見栄えを整えよう](#3ｰ4_Bootstrapでページの見栄えを整えよう)</br>
+[3-5_検索フォームを設置しよう](#3-5_検索フォームを設置しよう)</br>
+[3-6_フォームの値を取得しよう](#3-6_フォームの値を取得しよう)</br>
 
 </br>
 
@@ -267,10 +269,10 @@ Laravelでフォームを使うために**laravelcollective/html**というラ�
 検索フォーム用のテンプレート(search.blade.php)を作成して、下記のように編集する。
 ```php
 // bbs/resources/views/seaech.blade.php
-{{form::open(['method'=>'get'])}}
+{{Form::open(['method'=>'get'])}}
   {{csrf_field()}}
   <div class='form-group'>
-    {{ Form::label('keyword',null,['class'=>'form-control'])}}
+    {{ Form::label('keyword','キーワード:')}}
     {{ Form::text('keyword',null,['class'=>'form-control'])}}
   </div>
   <div class='form-group'>
@@ -300,3 +302,45 @@ Laravelのファサードは、アプリケーションのサービスコンテ�
 
 略
 ```
+これで一覧ページにアクセスすると検索フォームが表示される。</br>
+</br>
+
+***
+</br>
+
+### 3-6_フォームの値を取得しよう
+検索機能が正しく作動するようにファイルを編集する。</br>
+具体的には、検索フォームからGETメソッドでキーワードを受け取ったら、該当の記事を表示するよう`ArticleController.php`を修正する。
+
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+    public function index(Request $request)
+    {
+        // 下記を追記
+        if($request->filled('keyword')){
+            $keyword = $request->input('keyword');
+            $message = 'Welcome to my BBS:'.$keyword;
+            $article = Article::where('content','%'.$keyword.'%')->get();
+        }else{
+            $message = 'Welcome to My BBS';    
+             $articles = Article::all();        
+        }
+       
+        return view('index',['message' => $message], ['articles' => $articles]);
+    }
+```
+
+- `if($request->filled('keyword')){`</br>
+  indexメソッドの引数にリクエストを追加し、そのリクエストの変数に値がある場合という指定を行っている。</br>
+</br>
+
+- `$article = Article::where('content','%'.'$keyword'.'%')->get();`
+  SQLの項目でやったようにデータの中から曖昧検索を行い、GETメソッドで該当の記事を取得する。</br>
+</br>
+これで検索機能が追加できた。</br>
+</br>
+
+***
+</br>
+
+### 3-7_

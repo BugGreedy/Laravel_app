@@ -12,12 +12,18 @@ class ArticleController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $message = 'Welcome to My BBS';
         // 下記を追記
-        $articles = Article::all();
-        return view('index',['message' => $message], ['articles' => $articles]);
+        if($request->filled('keyword')){
+            $keyword = $request->input('keyword');
+            $message = 'Welcome to my BBS:'.$keyword;
+            $articles = Article::where('content', 'like','%'.$keyword.'%')->get();
+        }else{
+            $message = 'Welcome to My BBS';
+            $articles = Article::all();
+        }
+        return view('index',['message' => $message, 'articles' => $articles]);
     }
 
     /**
@@ -93,7 +99,6 @@ class ArticleController extends Controller
      */
     public function destroy(Request $request, $id , Article $article)
     {
-        //下記を追記
         $article = Article::find($id);
         $article->delete(); 
         return redirect('/articles');

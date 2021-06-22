@@ -7,6 +7,9 @@
 [3ｰ4_Bootstrapでページの見栄えを整えよう](#3ｰ4_Bootstrapでページの見栄えを整えよう)</br>
 [3-5_検索フォームを設置しよう](#3-5_検索フォームを設置しよう)</br>
 [3-6_フォームの値を取得しよう](#3-6_フォームの値を取得しよう)</br>
+[3-7_掲示板のルーティングを設計しよう](#3-7_掲示板のルーティングを設計しよう)</br>
+[3-8_新規投稿フォームを作成しよう](#3-8_新規投稿フォームを作成しよう)</br>
+[3-9_記事の保存機能を完成させよう](#3-9_記事の保存機能を完成させよう)</br>
 
 </br>
 
@@ -386,3 +389,54 @@ Route::delete('/article/{id}','ArticleController@destroy')->name('article.delete
 ここでいったんアドレスに(http://localhost:8000/article/edit/1)
 など打って詳細ページ同様に表示されるか確認。 
 </br>
+
+***
+<br>
+
+### 3-8_新規投稿フォームを作成しよう
+前回のチャプターで新規投稿機能であるcreateメソッドを作成しているので、それに投稿フォームを組み合わせる。</br>
+この投稿フォームのビューの作成は次のチャプターで行う。</br>
+</br>
+
+記事の新規投稿の流れ
+1. ユーザー側のWebブラウザからリクエストが送信される。
+2. サーバー側からWebフォーム(create())の情報を送信する。
+3. ユーザー側からリクエストと値(フォームに記入した記事データ)が送信される。
+4. サーバーは値をDBに格納(store())し、処理結果を送信する。
+Laravel側の動きとしては、createメソッドによって投稿フォームを送信し、storeメソッドによって投稿内容をDBに保存する。</br>
+</br>
+
+それでは新規投稿のコードを作っていく。</br>
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+// createメソッドからstoreメソッドに貼り付け
+public function store(Request $request)
+{
+    $article  = new Article();
+    $article->content = 'Hello BBS by store()method';
+    $article->user_name = 'moglin';
+    $article->save();
+    return redirect('/articles');
+}
+```
+続いて投稿フォームを呼び出せるようにcreateメソッドを修正する。
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function create()
+{
+    $message = 'New article';
+    return view('new',['message'=>$message]);
+}
+```
+続きは次のチャプターで。</br>
+</br>
+
+***
+</br>
+
+### 3-9_記事の保存機能を完成させよう
+前回の続きとして、createメソッドで呼び出すフォームのビューを作成して、新規投稿機能を完成させる。</br>
+それでは早速ビュー(new.blade.php)を作っていく。</br>
+
+```php
+// bbs/resources/views/new.blade.php

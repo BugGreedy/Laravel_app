@@ -33,13 +33,8 @@ class ArticleController extends Controller
      */
     public function create()
     {
-        //下記を追記
-        $article  = new Article();
-
-        $article->content = 'Hello BBS by create()method';
-        $article->user_name = 'moglin';
-        $article->save();
-        return redirect('/articles');
+        $message = 'New article';
+        return view('new',['message'=>$message]);
     }
 
     /**
@@ -50,7 +45,11 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $article  = new Article();
+        $article->content = 'Hello BBS by store()method';
+        $article->user_name = 'moglin';
+        $article->save();
+        return redirect('/articles');
     }
 
     /**

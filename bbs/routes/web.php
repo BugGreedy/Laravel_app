@@ -19,13 +19,17 @@ Route::get('/', function () {
 });
 
 // 一覧表示
-Route::get('/articles','ArticleController@index')->name('article.list');
+Route::get('/articles', 'ArticleController@index')->name('article.list');
+// 新規作成
+Route::get('/article/new', 'ArticleController@create')->name('article.new');
+// 記事の投稿
+Route::post('/article', 'ArticleController@store')->name('article.store');
 
-// 新規投稿
-Route::get('/article/new','ArticleController@create')->name('article.new');
+// 記事の編集
+Route::get('/article/edit/{id}', 'ArticleController@edit')->name('article.edit');
+Route::post('/article/update/{id}', 'ArticleController@update')->name('article.update');
 
 // 詳細表示
-Route::get('/article/{id}','ArticleController@show')->name('article.show');
-
+Route::get('/article/{id}', 'ArticleController@show')->name('article.show');
 // 記事の削除
-Route::delete('/article/{id}','ArticleController@destroy')->name('article.delete');
+Route::delete('/article/{id}', 'ArticleController@destroy')->name('article.delete');

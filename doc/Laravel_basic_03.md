@@ -436,7 +436,42 @@ public function create()
 
 ### 3-9_記事の保存機能を完成させよう
 前回の続きとして、createメソッドで呼び出すフォームのビューを作成して、新規投稿機能を完成させる。</br>
-それでは早速ビュー(new.blade.php)を作っていく。</br>
-
+</br>
+それでは早速ビュー(new.blade.php)を作成し、下記のように編集する。</br>
 ```php
 // bbs/resources/views/new.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>mogura bbs</h1>
+  <p>{{ $message}}</p>
+  {{ Form::open(['route'=> 'article.store'])}}
+    <div class='form-group'>
+      {{ Form::label('content','Content')}}
+      {{ Form::text('content',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::label('user_name','Name:')}}
+      {{ Form::text('user_name',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::submit('作成する',['class'=> 'btn btn-primary'])}}
+      <a href={{ route('article.list')}}>一覧に戻る</a>
+    </div>
+  {{ Form::close()}}
+@endsection
+```
+ここで一旦ブラウザを確認する。一覧ページから新規作成ボタンからnewへのリンクと、newの作成するボタンから正しく記事が作成されているか確認。</br>
+確認できたら次はstoreメソッドがnewのフォームの内容を正しく保存できるように修正する。
+
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function store(Request $request)
+{
+    $article  = new Article();
+    $article->content = $request->content;
+    $article->user_name = $request->user_name;
+    $article->save();
+    return redirect()->route('article.show',['id'=>$article->id]);
+}
+```

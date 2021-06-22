@@ -46,10 +46,10 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $article  = new Article();
-        $article->content = 'Hello BBS by store()method';
-        $article->user_name = 'moglin';
+        $article->content = $request->content;
+        $article->user_name = $request->user_name;
         $article->save();
-        return redirect('/articles');
+        return redirect()->route('article.show', ['id' => $article->id]);
     }
 
     /**

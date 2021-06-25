@@ -14,7 +14,9 @@ class ShopController extends Controller
      */
     public function index()
     {
-        //
+        //下記を記述
+        $shops = Shop::all();
+        return view('index',['shops'=>$shops]);
     }
 
     /**

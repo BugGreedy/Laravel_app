@@ -9,9 +9,10 @@
 [※ エラー対処1_マイグレーションできない](#エラー対処1_マイグレーションできない)</br>
 [1-6_ルーティングを定義しよう](#1-6_ルーティングを定義しよう)</br>
 [1-7_コントローラとビューを作成しよう](#1-7_コントローラとビューを作成しよう)</br>
+[* エラー対処2_コントローラが見つからないエラー「Target class 〇〇〇Controller does not exist.」](#エラー対処2_コントローラが見つからないエラー)</br>
 [1-8_記事一覧を作成しよう](#1-8_記事一覧を作成しよう)</br>
 [1-9_詳細画面を作ろう](#1-9_詳細画面を作ろう)</br>
-[※ エラー対処2_httpが強制的にhttpsになる](#エラー対処2_httpが強制的にhttpsになる)</br>
+[※ エラー対処3_httpが強制的にhttpsになる](#エラー対処2_httpが強制的にhttpsになる)</br>
 </br>
 
 ***
@@ -572,6 +573,7 @@ class ArticleController extends Controller
 現在のバージョン(8.~)で対応できるよう試行した。</br>
 </br>
 
+### エラー対処2_コントローラが見つからないエラー
 > [参考：Laravel8を試したら即効でエラー「Target class [〇〇〇Controller] does not exist.」が表示された - Qiita](https://qiita.com/tamakiiii/items/e71040173fa0a1fcad83)</br>
 上記の記事に記載してあった1つめの対策を実行。</br>
 `bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。
@@ -743,7 +745,7 @@ public function show(Request $request, $id, Article $article)
 ```
 </br>
 
-#### エラー対処2_httpが強制的にhttpsになる
+#### エラー対処3_httpが強制的にhttpsになる
 > ここで動作確認を行ったところ、リンク先に飛べずにエラーがおきる。
 > ```shell:ターミナル
 > [Thu Jun 17 14:43:17 2021] 127.0.0.1:62024 Invalid request (Unsupported SSL request)

@@ -1,6 +1,7 @@
 ## その他
 ### 目次
 
+* [CRUDのHTTPメソッドについてのおさらい](#CRUDのHTTPメソッドについてのおさらい)</br>
 * [モデル作成時のオプションについて](#モデル作成時のオプションについて)</br>
 * [リソースコントローラーとは](#リソースコントローラーとは)</br>
 
@@ -8,6 +9,25 @@
 </br>
 
 ***</br>
+
+### CRUDのHTTPメソッドについてのおさらい</br>
+  | CRUD | 意味 | メソッド |
+  | - | - | - |
+  | Create | 作成 | POST/PUT |
+  | Read | 読み込み | GET |
+  | Update | 更新 | PUT |
+  | Delete | 削除 | DELETE |</br>
+  
+  - HTTPメソッドは全部で8つ。(GET/POST/PUT/DELETE/HEAD/OPTIONS/TRACE/CONNECT)</br>
+  - GET：リソースの取得
+  - POST：リソースの追加
+  - PUT：リソースの更新
+  - DELETE：リソースの削除</br>
+</br>
+
+***
+</br>
+
 
 ### モデル作成時のオプションについて
 `% php artisan make:model -h`でモデル作成時のオプションを見る事ができる。</br>

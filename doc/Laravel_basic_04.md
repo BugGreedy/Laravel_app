@@ -4,6 +4,7 @@
 [4-1_アプリの概要を整理しよう](#4-1_アプリの概要を整理しよう)</br>
 [4-2_アプリケーションディレクトリを用意しよう](#4-2_アプリケーションディレクトリを用意しよう)</br>
 [4-3_モデルとコントローラを用意しよう](#4-3_モデルとコントローラを用意しよう)</br>
+[4-4_お店とカテゴリのテーブルを関連付けよう](#4-4_お店とカテゴリのテーブルを関連付けよう)</br>
 
 
 </br>
@@ -187,4 +188,105 @@ phpMyAdminで確認してみる。</br>
 ***
 </br>
 
-### 4-4_
+### 4-4_お店とカテゴリのテーブルを関連付けよう
+前章で作成したテーブルのリレーション(関連付け)を行う。</br>
+
+```php
+// lunchmap/app/Models/Shop.php
+class Shop extends Model
+{
+    use HasFactory;
+    // 下記を追加
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
+}
+```
+* **belongsTO**について</br>
+  今回のような関連付けにおいて、多対1の関係の1の方に記述を行う。</br>
+  ニュアンスとしては`Shop(多)はCategory(1)に所属する(belongsTo)`。</br>
+  → ●●飯店や〇〇茶房は'中華料理'というカテゴリに所属する。</br>
+</br>
+
+続いてphpMyAdminでサンプルデータを作っていく。</br>
+備考：ここはLaravelのシーダーという機能でもできる。</br>
+</br>
+それでは各テーブルに追加していく。</br>
+
+* categoriesテーブル
+  ```
+  INSERT INTO categories(name)
+  VALUES
+      ('イタリアン'),
+      ('中華'),
+      ('和食');
+  ```
+</br>
+
+* shopsテーブル
+  ```
+  INSERT INTO shops(name,address,category_id)
+  VALUES
+      ('パイザ亭', '東京都港区南青山3丁目', 1),
+      ('ラーメンLaravel', '東京都港区東青山', 2),
+      ('そばの霧島', '東京都港区西青山', 3);
+  ```
+</br>
+
+また、全体設定として下記を追加。
+```php
+// lunchmap/app/Providers/AppServiceProvider.php
+public function boot()
+{
+    //下記を追加
+    \URL::forceScheme('https');
+}
+```
+</br>
+
+***
+</br>
+
+### 4-5_お店一覧ページを作ろう
+一覧ページを作成する。同時にドメイン名だけの時にここにリダイレクトするようにする。</br>
+一覧ページのルーティングは次の通り。</br>
+</br>
+
+| URL | HTTPメソッド | 呼び出す機能 | コントローラメソッド |
+| - | - | - | - |
+| /shops | GET | 一覧表示 | index() |
+</br>
+
+それではまずルーティングから記述していく。
+```php
+// lunchmap/routes/web.php
+// 下記を追加
+Route::get('/shops','ShopController@index')->name('shop.list');
+
+Route::get('/', function () {
+    // 下記も変更する
+    // return view('welcome');
+    return redirect('/shops');
+});
+```
+これで`/shops`にアクセスした際はShopコントローラのindexメソッドが呼び出されるようにできた。</br>
+また`/`以降何も指定しない際は`/shop`にリダイレクトされるようになった。</br>
+</br>
+
+続いて先程ルーティングにて、呼び出すように設定したshopコントローラのindexメソッドを編集する。
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+public function index()
+{
+    //下記を記述
+    $shops = Shop::all();
+    return view('index',['shops'=>$shops]);
+}
+```
+</br>
+
+次は一覧表示に使われるindexのビューを作成する。
+```php
+// lunchmap/resources/views/index.blade.php
+

@@ -311,5 +311,5 @@ public function index()
 </html>
 ```
 ここで動作確認したところ,`Target class [ShopController] does not exist.`と表示され繋がらなかったので過去の学習を振り返った。</br>
-[振り返り](/doc/Laravel_basic_01.md)
-`bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。
+[振り返り:※ エラー対処2_コントローラが見つからないエラー「Target class 〇〇〇Controller does not exist.」](/doc/Laravel_basic_01.md)</br>
+`bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。</br>

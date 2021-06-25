@@ -11,6 +11,6 @@ class Shop extends Model
     // 下記を追加
     public function category()
     {
-        return $this->belongsTo('App\Category');
+        return $this->belongsTo('App\Models\Category');
     }
 }

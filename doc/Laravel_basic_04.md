@@ -5,6 +5,7 @@
 [4-2_アプリケーションディレクトリを用意しよう](#4-2_アプリケーションディレクトリを用意しよう)</br>
 [4-3_モデルとコントローラを用意しよう](#4-3_モデルとコントローラを用意しよう)</br>
 [4-4_お店とカテゴリのテーブルを関連付けよう](#4-4_お店とカテゴリのテーブルを関連付けよう)</br>
+[※ エラー対処1_テーブルのリレーションについて、カリキュラムのまま記述するとつながらなかった件](#エラー対処1_テーブルのリレーションについて、カリキュラムのまま記述するとつながらなかった件)</br>
 
 
 </br>
@@ -199,7 +200,8 @@ class Shop extends Model
     // 下記を追加
     public function category()
     {
-        return $this->belongsTo('App\Category');
+        // return $this->belongsTo('App\Category'); カリキュラム内ではこの記述だったが、このままだとエラーになる。
+         return $this->belongsTo('App\Models\Category'); //修正版
     }
 }
 ```
@@ -311,5 +313,37 @@ public function index()
 </html>
 ```
 ここで動作確認したところ,`Target class [ShopController] does not exist.`と表示され繋がらなかったので過去の学習を振り返った。</br>
-[振り返り:※ エラー対処2_コントローラが見つからないエラー「Target class 〇〇〇Controller does not exist.」](/doc/Laravel_basic_01.md)</br>
+[振り返り:エラー対処2_コントローラが見つからないエラー「Target class 〇〇〇Controller does not exist.」](/doc/Laravel_basic_01.md)</br>
 `bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。</br>
+</br>
+
+### エラー対処1_テーブルのリレーションについて、カリキュラムのまま記述するとつながらなかった件
+前章で作成したリレーションが呼び出せずエラーになる。</br>
+`Class "App\Category" not found (View: /Applications/MAMP/htdocs/Laravel_app/lunchmap/resources/views/index.blade.php)`</br>
+</br>
+
+ここでpaiza本来のエディタで作成していたところ`appディレクトリ`直下に`Category.php`(モデル)がある事に気づいた。</br>
+新しいバージョンのLaravelにおいては`app\Modelsディレクトリ`にモデルが配置されている。</br>
+そのため上記のエラーが発生していた原因は、参照しているモデルの位置(パス)の指定間違いであった。</br>
+
+```php
+// lunchmap/app/Models/Shop.php
+class Shop extends Model
+{
+    use HasFactory;
+    // 下記を追加
+    public function category()
+    {
+        // return $this->belongsTo('App\Category'); カリキュラム内ではこの記述だったが、このままだとエラーになる。
+         return $this->belongsTo('App\Models\Category'); //修正版
+    }
+}
+```
+上記を修正した結果、正しくお店一覧ページが表示された。
+以上。</br>
+</br>
+
+***
+</br>
+
+###

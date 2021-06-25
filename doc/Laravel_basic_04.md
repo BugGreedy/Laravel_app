@@ -127,7 +127,64 @@ Created Migration: 2021_06_25_003116_create_shops_table
 Controller created successfully.
 ```
 </br>
-
+これでShop、Categoryの各モデルとマイグレーションファイル、Shopのコントローラーができた。</br>
+</br>
 **備考：モデル作成時のオプションについて**</br>
 `% php artisan make:model -h`でモデル作成時のオプションを見る事ができる。</br>
-[参考:モデル作成時のオプションについて](/doc/memo.md)
+[参考:モデル作成時のオプションについて](/doc/memo.md)</br>
+</br>
+
+それではマイグレーションファイルを編集して、必要なcolumnを追加していこう。</br>
+```php
+// Categoryのマイグレーションファイル
+// lunchmap/database/migrations/2021_06_25_002742_create_categories_table.php
+
+public function up()
+{
+    Schema::create('categories', function (Blueprint $table) {
+        // 下記のように編集
+        $table->increments('id');
+        $table->string('name');
+        // ここまで
+        $table->timestamps();
+    });
+}
+
+// Shopのマイグレーションファイル
+// lunchmap/database/migrations/2021_06_25_003116_create_shops_table.php
+public function up()
+{
+    Schema::create('shops', function (Blueprint $table) {
+        // 下記のように編集
+        $table->increments('id');
+        $table->string('name');
+        $table->string('address');
+        $table->integer('category_id');
+        $table->timestamps();
+    });
+}
+```
+それではマイグレーションを実行しよう。
+```shell
+% php artisan migrate
+
+Migration table created successfully.
+Migrating: 2014_10_12_000000_create_users_table
+Migrated:  2014_10_12_000000_create_users_table (86.66ms)
+Migrating: 2014_10_12_100000_create_password_resets_table
+Migrated:  2014_10_12_100000_create_password_resets_table (69.11ms)
+Migrating: 2019_08_19_000000_create_failed_jobs_table
+Migrated:  2019_08_19_000000_create_failed_jobs_table (67.71ms)
+Migrating: 2021_06_25_002742_create_categories_table
+Migrated:  2021_06_25_002742_create_categories_table (36.31ms)
+Migrating: 2021_06_25_003116_create_shops_table
+Migrated:  2021_06_25_003116_create_shops_table (34.96ms)
+```
+マイグレーションが実行できた。</br>
+phpMyAdminで確認してみる。</br>
+</br>
+
+***
+</br>
+
+### 4-4_

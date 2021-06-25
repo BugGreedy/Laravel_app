@@ -14,7 +14,11 @@ class CreateShopsTable extends Migration
     public function up()
     {
         Schema::create('shops', function (Blueprint $table) {
-            $table->id();
+            // 下記のように編集
+            $table->increments('id');
+            $table->string('name');
+            $table->string('address');
+            $table->integer('category_id');
             $table->timestamps();
         });
     }

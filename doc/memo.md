@@ -2,6 +2,7 @@
 ### 目次
 
 [モデル作成時のオプションについて](#モデル作成時のオプションについて)</br>
+[リソースコントローラーとは](#リソースコントローラーとは)</br>
 
 
 </br>
@@ -42,3 +43,34 @@ Options:
 workintherain@MacBook-Pro lunchmap % 
 
 ```
+</br>
+
+***
+</br>
+
+### リソースコントローラーとは
+`php artisan make:model モデル名 -m -c -r`の`-r`について</br>
+これは生成されたコントローラーがリソースコントローラーである(リソースコントローラーを作成する)という事を示すオプションである。</br>
+</br>
+
+* リソースコントローラーとは</br>
+  DBへのCRUD操作を行うためのアクション(7メソッド)が定義されたコントローラー。</br>
+  * CRUD：Create(登録)、Read(読み込み)、Update(更新)、Delete(削除)</br>
+
+* リソースコントローラーの7メソッド</br>
+  ```
+  (1) public function index()
+  (2) public function create()
+  (3) public function store(Request $request)
+  (4) public function show($id)
+  (5) public function edit($id)
+  (6) public function update(Request $request, $id)
+  (7) public function destroy($id)
+  ```
+
+**結論**</br>
+モデル作成時に-rオプションで作成されたコントローラーは、ファイル内にもともと7メソッドが定義されているコントローラー。</br>
+</br>
+
+***
+</br>

@@ -289,4 +289,27 @@ public function index()
 次は一覧表示に使われるindexのビューを作成する。
 ```php
 // lunchmap/resources/views/index.blade.php
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <title>lunchmap</title>
+    <style>body {padding: 10px;}</style>
+  </head>
 
+  <body>
+    <h1>お店一覧</h1>
+
+    @foreach($shops as $shop)
+      <p>
+        {{ $shop->category->name}},
+        {{ $shop->name}},
+        {{ $shop->address}}
+      </p>
+    @endforeach
+  </body>
+</html>
+```
+ここで動作確認したところ,`Target class [ShopController] does not exist.`と表示され繋がらなかったので過去の学習を振り返った。</br>
+[振り返り](/doc/Laravel_basic_01.md)
+`bbs/app/Providers/RouteServiceProvider.php`に`protected $namespace = 'App\Http\Controllers';`の一文を追加。

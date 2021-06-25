@@ -39,6 +39,9 @@
     | 作成日時 | created_at |
     | 更新日時 | updates_at |
     </br>
+
+  - リレーション
+    shops.category_id = categories.id</br>
 </br>
 
 * 画面構成
@@ -103,4 +106,28 @@ DB_PASSWORD=root
 </br>
 
 ### 4-3_モデルとコントローラを用意しよう
+前章で作成したDBに対して、モデルとコントローラを用意してマイグレーションを実行する。</br>
+復習:Laravelではコントローラを作成する際に、モデルとマイグレーションファイルも同時に作成される。</br>
+</br>
+まずはCategoryのモデルを作成する。</br>
+こちらはコントローラなしで、マイグレーションファイルのみを同時生成する。</br>
 
+```shell
+% php artisan make:model Category -m
+
+Model created successfully.
+Created Migration: 2021_06_25_002742_create_categories_table
+```
+続いてShopモデルを作る。</br>
+こちらはコントローラとマイグレーションファイルを同時生成する。
+```shell
+% php artisan make:model Shop -m -c -r
+
+Created Migration: 2021_06_25_003116_create_shops_table
+Controller created successfully.
+```
+</br>
+
+**備考：モデル作成時のオプションについて**</br>
+`% php artisan make:model -h`でモデル作成時のオプションを見る事ができる。</br>
+[参考:モデル作成時のオプションについて](/doc/memo.md)

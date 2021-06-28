@@ -6,11 +6,13 @@
   {{ Form::open(['route'=> 'article.store'])}}
     <div class='form-group'>
       {{ Form::label('content','Content')}}
-      {{ Form::text('content',null)}}
+      <div class='col-sm-8'>
+      {{ Form::textarea('content','記事を入力してください',['rows'=>'3'])}}
+      </div>
     </div>
     <div class='form-group'>
       {{ Form::label('user_name','Name:')}}
-      {{ Form::text('user_name',null)}}
+      {{ Form::text('user_name','ユーザー名を入力してください')}}
     </div>
     <div class='form-group'>
       {{ Form::submit('作成する',['class'=> 'btn btn-primary'])}}

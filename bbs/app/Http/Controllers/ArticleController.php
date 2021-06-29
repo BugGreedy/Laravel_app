@@ -77,7 +77,8 @@ class ArticleController extends Controller
     {
         $message = 'Edit your article' . $id;
         $article = Article::find($id);
-        return view('show', ['message' => $message, 'article' => $article]);
+        // 下記を修正
+        return view('edit', ['message' => $message, 'article' => $article]);
     }
 
     /**

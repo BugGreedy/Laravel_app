@@ -482,4 +482,20 @@ public function store(Request $request)
 </br>
 
 ### 3-10_編集フォームを追加しよう-その1
-+
+ここでは掲示板アプリに編集フォームを追加する。</br>
+すでにルーティングは設定済みなのでコントローラを編集する。</br>
+```php
+// ルーティング設定(設定済み) bbs/routes/web.php
+// 記事の編集
+Route::get('/article/edit/{id}', 'ArticleController@edit')->name('article.edit');
+Route::post('/article/update/{id}', 'ArticleController@update')->name('article.update');
+
+// コントローラ bbs/app/Http/Controllers/ArticleController.php
+public function edit(Request $request, $id, Article $article)
+{
+    $message = 'Edit your article' . $id;
+    $article = Article::find($id);
+    // 下記をshowからeditに修正
+    return view('edit', ['message' => $message, 'article' => $article]);
+}
+```

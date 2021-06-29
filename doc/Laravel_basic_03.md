@@ -11,6 +11,7 @@
 [3-8_新規投稿フォームを作成しよう](#3-8_新規投稿フォームを作成しよう)</br>
 [3-9_記事の保存機能を完成させよう](#3-9_記事の保存機能を完成させよう)</br>
 [3-10_編集フォームを追加しよう-その1](#3-10_編集フォームを追加しよう-その1)</br>
+[3-11_編集フォームを追加しよう-その2](#3-11_編集フォームを追加しよう-その2)</br>
 
 </br>
 
@@ -499,3 +500,79 @@ public function edit(Request $request, $id, Article $article)
     return view('edit', ['message' => $message, 'article' => $article]);
 }
 ```
+次に上記で指定したeditのビューを作っていく。</br>
+new.blade.phpをコピーしてedit.blage.phpを作成</br>
+
+```php
+// bbs/resources/views/edit.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>mogura bbs</h1>
+  <p>{{ $message}}</p>
+  <!-- 下記を編集 -->
+  <!-- {{ Form::open(['route'=> 'article.store'])}} -->
+  {{ Form::model($article,['route'=> ['article.update',$article->id]])}}
+    <div class='form-group'>
+      {{ Form::label('content','Content')}}
+      <div class='col-sm-8'>
+      {{ Form::textarea('content',null,['rows'=>'3'])}}
+      </div>
+    </div>
+    <div class='form-group'>
+      {{ Form::label('user_name','Name:')}}
+      {{ Form::text('user_name',null)}}
+    </div>
+    <div class='form-group'>
+    <!-- 下記を編集 -->
+      <!-- {{ Form::submit('作成する',['class'=> 'btn btn-primary'])}} -->
+      <!-- <a href={{ route('article.list')}}>一覧に戻る</a> -->
+      {{ Form::submit('保存する',['class'=> 'btn btn-primary'])}}
+      <a href={{ route('article.show',['id'=> $article->id])}}>一覧に戻る</a>
+    </div>
+  {{ Form::close()}}
+@endsection
+```
+ここでは`{{ Form::model($article,['route'=> ['article.update',$article->id]])}}`というように**model**というフォームファサードを用いている。</br>
+これによって入力欄に自動的に取得したIDの値を表示する事ができる。</br>
+</br>
+
+いったんここで動作確認を行う。</br>
+一覧ページからアドレスバーに`/article/edit/1`としてid=1の記事が入力欄に表示されていればOK。</br>
+</br>
+
+***
+</br>
+
+### 3-11_編集フォームを追加しよう-その2
+前章で追加した編集ページで、修正した内容を保存できるようにupdateメソッドを編集する。</br>
+
+```php
+// bbs/app/Http/Controllers/ArticleController.php
+public function update(Request $request,$id, Article $article)
+{
+    // 下記を追加
+    $article  = Article::find($id);
+    $article->content = $request->content;
+    $article->user_name = $request->user_name;
+    $article->save();
+    return redirect()->route('article.show', ['id' => $article->id]);
+}
+```
+基本的にはstoreメソッドからコードをコピーして編集する。</br>
+storeメソッドでは、`$article = new Article();`のように新しい記事を作成するのに対し</br>
+updateメソッドでは。`$article = Article::find($id);`というように指定のidの値を保存する。</br>
+</br>
+
+つぎに編集画面を開けるように詳細画面を編集する。</br>
+
+```php
+// bbs/resources/views/show.blade.php
+<p>
+  <a href={{ route('article.list') }} class='btn btn-outline-primary'>一覧に戻る</a>
+  <!-- 下記を追加 -->
+  <a href={{ route('article.edit',['id' => $article->id]) }} class='btn btn-outline-primary'>編集</a>
+</p>
+```
+これで詳細ページに編集ボタンを追加できた。</br>
+以上で掲示板アプリケーションの機能を全て追加できた。

@@ -1,17 +1,6 @@
-<!DOCTYPE html>
-<html>
+@extends('layout')
 
-<head>
-  <meta charset='utf-8'>
-  <title>Lunchmap</title>
-  <style>
-    body {
-      padding: 10px;
-    }
-  </style>
-</head>
-
-<body>
+@section('content')
   <h1>お店一覧</h1>
 
   @foreach ($shops as $shop)
@@ -21,6 +10,4 @@
     {{ $shop->address }}
   </p>
   @endforeach
-</body>
-
-</html>
+@endsection

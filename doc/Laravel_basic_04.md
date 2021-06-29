@@ -350,4 +350,96 @@ class Shop extends Model
 
 ### 4-6_共通テンプレートにBootstrapを導入しよう
 共通テンプレートにBootstrapを導入してナビゲーションバーを追加する。</br>
+</br>
+まず共通テンプレートを作成する。</br>
+一覧表示のビューをコピーして共通テンプレートを作成。</br>
+
+```shell
+lunchmap % cp resources/views/index.blade.php resources/views/layout.blade.php 
+```
+</br>
+
+続いてファイルの内容を下記のように編集。
+```php
+// lunchmap/resources/views/layout.blade.php
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <title>Lunchmap</title>
+    <style>
+      body {
+        padding: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    @yield('content')
+  </body>
+
+</html>
+```
+上記のようにページ各自の内容を`@yield('content')`という部分に割り当てるようにして、他の共通部分のみを残す。</br>
+</br>
+
+続いて一覧表示ページのテンプレートを編集する。
+```php
+// lunchmap/resources/views/index.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>お店一覧</h1>
+
+  @foreach ($shops as $shop)
+  <p>
+    {{ $shop->category->name }},
+    {{ $shop->name }},
+    {{ $shop->address }}
+  </p>
+  @endforeach
+@endsection
+```
+共通テンプレートを`@extends('layout')`で呼び出し、ページ独自の表示部分を`@section('content')~@endsection`で囲む。</br>
+ここで一旦動作確認を行い、表示が問題なければBootstrapを導入する。</br>
+共通テンプレートを編集する。
+
+```php
+// lunchmap/resources/views/layout.blade.php
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset='utf-8'>
+  <!-- 下記を追加 -->
+  <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+  <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+  <!-- 追加ここまで -->
+  <title>Lunchmap</title>
+  <style>
+    body {
+      padding-top: 80px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 下記にナビゲーションバーを追加 -->
+  <nav class='navbar navbar-expand-md navbar-dark bg-dark fixed-top'>
+    <a class='navbar-brand' href={{route('shop.list')}}>Lunchmap</a>
+  </nav>
+  <!-- コンテンツをcontainerタグで囲む -->
+  <div class='container'>
+    @yield('content')
+  </div>
+</body>
+
+</html>
+```
+ナビゲーションバーにかぶらないようにbody要素の空白を`padding-top:80px;`に変更。</br>
+</br>
+
+***
+</br>
 

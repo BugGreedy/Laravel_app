@@ -8,6 +8,7 @@
 [※ エラー対処1_テーブルのリレーションについて、カリキュラムのまま記述するとつながらなかった件](#エラー対処1_テーブルのリレーションについて、カリキュラムのまま記述するとつながらなかった件)</br>
 [4-5_お店一覧ページを作ろう](#4-5_お店一覧ページを作ろう)</br>
 [4-6_共通テンプレートにBootstrapを導入しよう](#4-6_共通テンプレートにBootstrapを導入しよう)</br>
+[4-7_お店の詳細ページを作ろう](#4-7_お店の詳細ページを作ろう)</br>
 
 
 </br>
@@ -443,3 +444,78 @@ lunchmap % cp resources/views/index.blade.php resources/views/layout.blade.php
 ***
 </br>
 
+### 4-7_お店の詳細ページを作ろう
+ここではお店の詳細ページを作成する。</br>
+* ルーティング
+  | URL | HTTPメソッド | 呼び出す機能 | コントローラメソッド |
+  | - | - | - | - |
+  | /shops | GET | 一覧表示 | index() |
+  | /shop/{id} | GET | 詳細表示 | show() |</br>
+</br>
+
+それではルーティングを設定していく
+```php
+// lunchmap/routes/web.php
+Route::get('/shops', 'ShopController@index')->name('shop.list');
+// 下記を追加【詳細ページ)
+Route::show('/shop/{id}','ShopController@show')->name('shop.detail');
+
+Route::get('/', function () {
+    return redirect('/shops');
+});
+```
+続いてコントローラのshowメソッドを記述する。
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+public function show($id)
+{
+    $shop = Shop::find($id);
+    return view('show',['shop'=>$shop]);
+}
+```
+続いて詳細ページのビューを一覧ページのビューからコピーして作成する。
+```php
+// lunchmap/resources/views/show.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>{{ $shop->name }}</h1>
+
+  <div>
+    <p>{{ $shop->category->name }}</p>
+    <p>{{ $shop->address }}</p>
+  </div>
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+  </div>
+@endsection
+```
+ここで一度動作確認を行う。</br>
+`/shop/1`などにアクセスしてそのidの詳細ページが表紙されればOK.</br>
+</br>
+
+つぎに一覧ページから詳細ページへのリンクを設置する。</br>
+```php
+// lunchmap/resources/views/index.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>お店一覧</h1>
+
+  {{-- これまで箇条書きで表示されていた一覧にテーブルを割り当てる --}}
+  <table class='table table-striped table-hover'>
+    <tr>
+      <th>カテゴリ</th><th>店名</th><th>住所</th>
+    </tr>
+    @foreach ($shops as $shop)
+      <tr>
+        <td>{{ $shop->category->name }}</td>,
+        <td>
+          <a href={{ route('shop.detail',['id' => $shop->id])}}>{{ $shop->name }}</a>
+        </td>,
+        <td>{{ $shop->address }}</td>
+      </tr>
+    @endforeach
+  </table>
+@endsection
+```

@@ -46,9 +46,10 @@ class ShopController extends Controller
      * @param  \App\Models\Shop  $shop
      * @return \Illuminate\Http\Response
      */
-    public function show(Shop $shop)
+    public function show($id)
     {
-        //
+        $shop = Shop::find($id);
+        return view('show',['shop'=>$shop]);
     }
 
     /**

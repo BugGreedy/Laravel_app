@@ -12,11 +12,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-// 下記を追加
 Route::get('/shops', 'ShopController@index')->name('shop.list');
+// 下記を追加【詳細ページ)
+Route::get('/shop/{id}','ShopController@show')->name('shop.detail');
 
 Route::get('/', function () {
-    // 下記も変更する
-    // return view('welcome');
     return redirect('/shops');
 });
+

@@ -104,3 +104,4 @@ workintherain@MacBook-Pro lunchmap %
 ***
 </br>
 
+`pluck('name','id')`：あるレコードから指定したカラムの値のみを取り出してくれる関数。

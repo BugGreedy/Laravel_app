@@ -9,6 +9,8 @@
 [4-5_お店一覧ページを作ろう](#4-5_お店一覧ページを作ろう)</br>
 [4-6_共通テンプレートにBootstrapを導入しよう](#4-6_共通テンプレートにBootstrapを導入しよう)</br>
 [4-7_お店の詳細ページを作ろう](#4-7_お店の詳細ページを作ろう)</br>
+[4-8_新規投稿フォームを作ろう](#4-8_新規投稿フォームを作ろう)</br>
+[エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found"](#エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found")</br>
 
 
 </br>
@@ -519,3 +521,118 @@ public function show($id)
   </table>
 @endsection
 ```
+これで一覧ページから詳細への各リンクができた。</br>
+</br>
+
+***
+</br>
+
+### 4-8_新規投稿フォームを作ろう
+ここでは新規投稿フォームを追加する。</br>
+ルーティングは下記の通り</br>
+
+* ルーティング
+  | URL | HTTPメソッド | 呼び出す機能 | コン
+  | - | - | - | - |
+  | /shops | GET | 一覧表示 | index() |
+  | /shop/{id} | GET | 詳細表示 | show() |
+  | /shop/new | GET | 新規作成 | create() |
+  | /shop | POST | 保存 | store() |
+</br>
+</br>
+
+それでは作っていく。</br>
+まずルーティングを設定する。</br>
+
+```php
+// lunchmap/routes/web.php
+Route::get('/shops', 'ShopController@index')->name('shop.list');
+// 下記を追加 新規投稿
+Route::get('/shop/new', 'ShopController@create')->name('shop.new');
+Route::post('/shop', 'ShopController@store')->name('shop.store');
+// 詳細
+Route::get('/shop/{id}', 'ShopController@show')->name('shop.detail');
+
+Route::get('/', function () {
+    return redirect('/shops');
+});
+```
+> **注意**</br>
+> ここも前回同様に詳細ページの記述が先にあると、新規投稿の`new`が``{id}`に該当してしまいエラーになってしまう。</br>
+> そのため詳細のルーティングより先に、新規投稿ページを記述する。</br>
+</br>
+次はコントローラにメソッドを追加する。</br>
+まずはcreateメソッドを追加する。</br>
+
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+// 頭の部分の箇所に下記を追記
+
+use App\Models\Shop;
+// 下記を追加
+use App\Models\Category;
+use Illuminate\Http\Request;
+
+//省略
+public function create()
+{
+    //下記を追記
+    $categories = Category::all()->pluck('name','id');
+    return view('new',['categories'=> $categories]);
+}
+```
+`pluck('name','id')`：あるレコードから指定したカラムの値のみを取り出してくれる関数。</br>
+</br>
+次に新規投稿のビューを詳細ページのビューからコピーして作成する。</br>
+
+```php
+// lunchmap/resources/views/new.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>新しいお店</h1>
+  {{ Form::open(['route' => 'shop.store']) }}
+    <div class='form-group'>
+      {{ Form::label('name','店名：')}}
+      {{ Form::text('name',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::label('address','住所：')}}
+      {{ Form::text('address',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::label('category_id','カテゴリ：')}}
+      {{ Form::select('category_id',$categories)}}
+    <div class='form-group'>
+      {{ Form::submit('作成する',['class'=> 'btn btn-primary'])}}
+    </div>
+  {{ Form::close()}}
+
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+  </div>
+@endsection
+```
+ここで動作確認を行ったところ`Class "Form" not found`というエラーが出たので下記の対処を行った。</br> 
+</br>
+
+### エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found" 
+>シンプルに`laravelcollective/html`を未導入だったためフォームファサードが使えなかった。</br>
+>
+>```shell
+>unchmap % composer require laravelcollective/html
+>Using version ^6.2 for laravelcollective/html
+>```
+>以上。</br>
+></br>
+
+再度動作確認を行い`/shop/new`にアクセスし、新規投稿ページが表示できればOK。</br>
+現状はまだstoreメソッドを定義していないためまだ投稿はできない。</br>
+</br>
+
+***
+</br>
+
+### 
+
+

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Shop;
+// 下記を追加
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class ShopController extends Controller
@@ -26,7 +28,9 @@ class ShopController extends Controller
      */
     public function create()
     {
-        //
+        $shop = new Shop;
+        $categories = Category::all()->pluck('name','id');
+        return view('new',['categories'=> $categories]);
     }
 
     /**

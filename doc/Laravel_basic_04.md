@@ -13,6 +13,7 @@
 [エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found"](#エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found")</br>
 [4-9_投稿フォームの内容を保存しよう](#4-9_投稿フォームの内容を保存しよう)</br>
 [4-10_お店の編集フォームを作ろう](#4-10_お店の編集フォームを作ろう)</br>
+[4-11_編集内容を更新しよう](#4-11_編集内容を更新しよう)</br>
 
 
 </br>
@@ -781,3 +782,47 @@ public function edit(Shop $shop, $id)
 </br>
 
 ### 4-11_編集内容を更新しよう
+ここでは前章で作成した編集フォームを保存する機能(更新)を追加する。</br>
+updateのルーティングは前章で記述したのでコントローラのupdateメソッドを編集する。</br>
+基本的にはstoreメソッドからコピーして編集する。
+
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+// 下記を編集
+public function update(Request $request, $id, Shop $shop)
+{
+    $shop = Shop::find($id);
+    $shop->name = request('name');
+    $shop->address = request('address');
+    $shop->category_id = request('category_id');
+    $shop->save();
+    return redirect()->route('shop.detail', ['id' => $shop->id]);
+}
+```
+続いて詳細ページから編集ページへのリンクを設置する。
+```php
+// lunchmap/resources/views/show.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>{{ $shop->name }}</h1>
+  
+  <div>
+    <p>{{ $shop->category->name }}</p>
+    <p>{{ $shop->address }}</p>
+  </div>
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+    {{-- 下記を追加 --}}
+    | <a href={{ route('shop.edit',['id' => $shop->id])}}>編集<a>
+
+  </div>
+@endsection
+```
+これで更新機能が追加できた。</br>
+</br>
+
+***
+</br>
+
+### 4-12_

@@ -83,9 +83,15 @@ class ShopController extends Controller
      * @param  \App\Models\Shop  $shop
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Shop $shop)
+    // 下記を編集
+    public function update(Request $request, $id, Shop $shop)
     {
-        //
+        $shop = Shop::find($id);
+        $shop->name = request('name');
+        $shop->address = request('address');
+        $shop->category_id = request('category_id');
+        $shop->save();
+        return redirect()->route('shop.detail', ['id' => $shop->id]);
     }
 
     /**

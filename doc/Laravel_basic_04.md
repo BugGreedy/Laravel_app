@@ -635,5 +635,61 @@ public function create()
 </br>
 
 ### 4-9_投稿フォームの内容を保存しよう
+ここでは前章で作成した新規登録フォームで保存できる機能を追加する。</br>
+投稿内容を保存するためのルートはすでに記述してあるので、コントローラのstoreメソッドを編集する。</br>
 
+```php
+//  lunchmap/routes/web.php 記述済みルーティング
+// 新規投稿
+Route::get('/shop/new', 'ShopController@create')->name('shop.new'
+Route::post('/shop', 'ShopController@store')->name('shop.store');
 
+// lunchmap/app/Http/Controllers/ShopController.php
+public function store(Request $request)
+{
+    // 下記を追加
+    $shop = new Shop();
+    $shop->name = request('name');
+    $shop->address = request('address');
+    $shop->category_id = request('category_id'); 
+    $shop->save();
+    return redirect()->route('shop.detail',['id' => $shop->id]);
+}
+```
+次にお店の一覧ページから新規の投稿フォームにリンクさせておく。
+```php
+// lunchmap/resources/views/index.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>お店一覧</h1>
+
+  <table class='table table-striped table-hover'>
+    <tr>
+      <th>カテゴリ</th><th>店名</th><th>住所</th>
+    </tr>
+    @foreach ($shops as $shop)
+      <tr>
+        <td>{{ $shop->category->name }}</td>
+        <td>
+          <a href={{ route('shop.detail',['id' => $shop->id])}}>{{ $shop->name }}</a>
+        </td>
+        <td>{{ $shop->address }}</td>
+      </tr>
+    @endforeach
+  </table>
+
+  {{-- 下記を追加 --}}
+  <div>
+    <a href={{ route('shop.new')}} class='btn btn-outline-primary'>新しいお店</a>
+  </div>
+    
+@endsection
+```
+これで新規投稿機能が追加できた。</br>
+</br>
+
+***
+</br>
+
+### 4-10_

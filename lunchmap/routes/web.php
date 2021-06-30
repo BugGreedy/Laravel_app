@@ -18,12 +18,15 @@ Route::get('/shops', 'ShopController@index')->name('shop.list');
 Route::get('/shop/new', 'ShopController@create')->name('shop.new');
 Route::post('/shop', 'ShopController@store')->name('shop.store');
 
-// 下記を追加 編集と更新
+// 編集と更新
 Route::get('/shop/edit/{id}','ShopController@edit')->name('shop.edit');
 Route::post('/shop/update/{id}','ShopController@update')->name('shop.update');
 
 // 詳細
 Route::get('/shop/{id}', 'ShopController@show')->name('shop.detail');
+
+// 下記を追加 削除
+Route::delete('/shop/{id}','ShopController@destroy')->name('shop.destroy');
 
 Route::get('/', function () {
     return redirect('/shops');

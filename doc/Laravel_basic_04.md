@@ -14,6 +14,7 @@
 [4-9_投稿フォームの内容を保存しよう](#4-9_投稿フォームの内容を保存しよう)</br>
 [4-10_お店の編集フォームを作ろう](#4-10_お店の編集フォームを作ろう)</br>
 [4-11_編集内容を更新しよう](#4-11_編集内容を更新しよう)</br>
+[4-12_お店の情報を削除しよう](#4-12_お店の情報を削除しよう)</br>
 
 
 </br>
@@ -825,4 +826,87 @@ public function update(Request $request, $id, Shop $shop)
 ***
 </br>
 
-### 4-12_
+### 4-12_お店の情報を削除しよう
+ここでは削除機能を追加する。ルーティングは下記の削除の行
+
+* ルーティング
+  | URL | HTTPメソッド | 呼び出す機能 | コントローラメソッド |
+  | - | - | - | - |
+  | /shops | GET | 一覧表示 | index() |
+  | /shop/{id} | GET | 詳細表示 | show() |
+  | /shop/new | GET | 新規作成 | create() |
+  | /shop | POST | 保存 | store() |
+  | /shop/edit/{id} | GET | 編集 | edit() |
+  | /shop/update/{id} | POST | 更新 | update() |
+  | /shop/{id} | DELETE | *削除 | destroy() |
+  </br>
+</br>
+
+それではルーティングを設定する。</br>
+
+```php
+// lunchmap/routes/web.php
+Route::get('/shops', 'ShopController@index')->name('shop.list');
+
+// 新規投稿
+Route::get('/shop/new', 'ShopController@create')->name('shop.new');
+Route::post('/shop', 'ShopController@store')->name('shop.store');
+
+// 編集と更新
+Route::get('/shop/edit/{id}','ShopController@edit')->name('shop.edit');
+Route::post('/shop/update/{id}','ShopController@update')->name('shop.update');
+
+// 詳細
+Route::get('/shop/{id}', 'ShopController@show')->name('shop.detail');
+
+// 下記を追加 削除
+Route::delete('/shop/{id}','ShopController@destroy')->name('shop.destroy');
+
+Route::get('/', function () {
+    return redirect('/shops');
+});
+```
+次にコントローラでdestroyメソッドを編集する。</br>
+
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+// 下記を編集
+public function destroy($id)
+{
+    $shop = Shop::find($id);
+    $shop->delete();
+    return redirect('/shops');
+}
+```
+続いて詳細ページにこの機能を呼び出すボタンを追加する。</br>
+DELETEメソッドはリンクとして呼び出せないのでフォームファサードでDELETEメソッドを指定する。</br>
+
+```php
+// lunchmap/resources/views/show.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>{{ $shop->name }}</h1>
+  
+  <div>
+    <p>{{ $shop->category->name }}</p>
+    <p>{{ $shop->address }}</p>
+  </div>
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+    | <a href={{ route('shop.edit',['id' => $shop->id])}}>編集<a>
+    {{-- 下記を追加 --}}
+    <p></p>
+    {{ Form::open(['method'=>'delete','route'=>[ 'shop.destroy',$shop->id]])}}
+      {{ Form::submit('削除',['class'=>'btn btn-outline-danger'])}}
+    {{ Form::close()}}
+  </div>
+@endsection
+```
+これで削除機能が追加できた。</br>
+</br>
+
+***
+</br>
+
+### 4-13_Googleマップを表示しよう

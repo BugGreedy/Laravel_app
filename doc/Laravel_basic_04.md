@@ -12,6 +12,7 @@
 [4-8_新規投稿フォームを作ろう](#4-8_新規投稿フォームを作ろう)</br>
 [エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found"](#エラー対処_2_フォームが見つからないエラー"Class_"Form"_not_found")</br>
 [4-9_投稿フォームの内容を保存しよう](#4-9_投稿フォームの内容を保存しよう)</br>
+[4-10_お店の編集フォームを作ろう](#4-10_お店の編集フォームを作ろう)</br>
 
 
 </br>
@@ -621,7 +622,7 @@ public function create()
 >シンプルに`laravelcollective/html`を未導入だったためフォームファサードが使えなかった。</br>
 >
 >```shell
->unchmap % composer require laravelcollective/html
+>lunchmap % composer require laravelcollective/html
 >Using version ^6.2 for laravelcollective/html
 >```
 >以上。</br>
@@ -692,4 +693,91 @@ public function store(Request $request)
 ***
 </br>
 
-### 4-10_
+### 4-10_お店の編集フォームを作ろう
+ここでは登録情報を編集するフォームを作成する。</br>
+ルーティングは下記の編集と更新の箇所。</br>
+
+* ルーティング
+  | URL | HTTPメソッド | 呼び出す機能 | コントローラメソッド |
+  | - | - | - | - |
+  | /shops | GET | 一覧表示 | index() |
+  | /shop/{id} | GET | 詳細表示 | show() |
+  | /shop/new | GET | 新規作成 | create() |
+  | /shop | POST | 保存 | store() |
+  | /shop/edit/{id} | GET | *編集 | edit() |
+  | /shop/update/{id} | POST | *更新 | update() |
+  | /shop/{id} | DELETE | 削除 | destroy() |
+  </br>
+</br>
+
+それではルーティングを設定する。</br>
+
+```php
+// lunchmap/routes/web.php
+Route::get('/shops', 'ShopController@index')->name('shop.list');
+
+// 新規投稿
+Route::get('/shop/new', 'ShopController@create')->name('shop.new');
+Route::post('/shop', 'ShopController@store')->name('shop.store');
+
+// 下記を追加 編集と更新
+Route::get('/shop/edit/{id}','ShopController@edit')->name('shop.edit');
+Route::post('/shop/update/{id}','ShopController@update')->name('shop.update');
+
+// 詳細
+Route::get('/shop/{id}', 'ShopController@show')->name('shop.detail');
+
+Route::get('/', function () {
+    return redirect('/shops');
+});
+```
+次はコントローラにメソッドを追加する。</br>
+まずeditメソッドを編集する。
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+// 下記を編集
+public function edit(Shop $shop, $id)
+{   
+    $shop = Shop::find($id);
+    $categories = Category::all()->pluck('name','id');
+    return view('edit',['shop'=>$shop,'categories'=>$categories]);
+}
+```
+続いてeditビューを`new.blade.phpか`らコピーして作成する。</br>
+
+```php
+// lunchmap/resources/views/edit.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>{{ $shop->name }}を編集する</h1>
+  {{ Form::model($shop,['route' => ['shop.update',$shop->id]]) }}
+    <div class='form-group'>
+      {{ Form::label('name','店名：')}}
+      {{ Form::text('name',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::label('address','住所：')}}
+      {{ Form::text('address',null)}}
+    </div>
+    <div class='form-group'>
+      {{ Form::label('category_id','カテゴリ：')}}
+      {{ Form::select('category_id',$categories)}}
+    <div class='form-group'>
+      {{ Form::submit('更新する',['class'=> 'btn btn-primary'])}}
+    </div>
+  {{ Form::close()}}
+
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+  </div>
+@endsection
+```
+ここで動作確認を行う。</br>
+`shop/edit/1`にアクセスして、入力欄に既存の値が表示されていればOK。</br>
+</br>
+
+***
+</br>
+
+### 4-11_編集内容を更新しよう

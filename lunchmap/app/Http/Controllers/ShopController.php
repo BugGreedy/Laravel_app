@@ -68,9 +68,12 @@ class ShopController extends Controller
      * @param  \App\Models\Shop  $shop
      * @return \Illuminate\Http\Response
      */
-    public function edit(Shop $shop)
-    {
-        //
+    // 下記を編集
+    public function edit(Shop $shop, $id)
+    {   
+        $shop = Shop::find($id);
+        $categories = Category::all()->pluck('name','id');
+        return view('edit',['shop' => $shop, 'categories' => $categories]);
     }
 
     /**

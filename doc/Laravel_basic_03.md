@@ -501,7 +501,7 @@ public function edit(Request $request, $id, Article $article)
 }
 ```
 次に上記で指定したeditのビューを作っていく。</br>
-new.blade.phpをコピーしてedit.blage.phpを作成</br>
+new.blade.phpをコピーしてedit.blade.phpを作成</br>
 
 ```php
 // bbs/resources/views/edit.blade.php

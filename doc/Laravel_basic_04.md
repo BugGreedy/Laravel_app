@@ -910,3 +910,50 @@ DELETEメソッドはリンクとして呼び出せないのでフォームフ�
 </br>
 
 ### 4-13_Googleマップを表示しよう
+アプリケーションにWeb地図サービスのGoogleマップを利用する。</br>
+Googleマップを利用するためにAPIを用いる。</br>
+</br>
+
+- **APIとは**</br>
+  Application Programming Interfaceの略で、プログラムから別のプログラムの機能を呼び出すために用意された命令や関数の事。</br>
+  Googleマップを利用する際には**Google Maps API**を*APIキ*ーを取得して使用する。</br>
+  今回はデモキーを使用して実装を行う。</br>
+</br>
+
+それでは導入していく。</br>
+各記事の詳細ページに地図を表示できるようにする。</br>
+
+```php
+// lunchmap/resources/views/show.blade.php
+@extends('layout')
+
+@section('content')
+  <h1>{{ $shop->name }}</h1>
+  
+  <div>
+    <p>{{ $shop->category->name }}</p>
+    <p>{{ $shop->address }}</p>
+  </div>
+
+  {{-- 下記を追加 --}}
+  <iframe id='map' src='https://www.google.com/maps/embed/v1/place?key=(GoogleマップAPIキー)&q={{ $shop->address }}'
+    width='100%'
+    height='320'
+    frameborder='0'>
+    </iframe>
+
+
+  <div>
+    <a href={{ route('shop.list')}}>一覧に戻る</a>
+    | <a href={{ route('shop.edit',['id' => $shop->id])}}>編集<a>
+    {{-- 下記を追加 --}}
+    <p></p>
+    {{ Form::open(['method'=>'delete','route'=>[ 'shop.destroy',$shop->id]])}}
+      {{ Form::submit('削除',['class'=>'btn btn-outline-danger'])}}
+    {{ Form::close()}}
+  </div>
+@endsection
+```
+APIキーに制限があるためローカル環境で確認できないが、指定のコンテナ上ではGoogleマップの表示が確認できた。</br>
+記述の内容は、APIキーを埋め込んだ後、データの住所を連結して表示する地図の位置を指定している。</br>
+

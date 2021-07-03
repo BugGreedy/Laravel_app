@@ -597,7 +597,7 @@ public function destroy(Request $request, $id , Article $article)
     //下記を追記
     $article = Article::find($id);
     $article->delete();
-    retuen redirect('/articles');
+    return redirect('/articles');
 }
 ```
 </br>

@@ -93,7 +93,7 @@ test_auth % php artisan make:auth
 >そこで下記の所作を行った。</br>
 >参考：
 >- [Laravel 6.0 で「make:auth」が利用できなくなったので、対応方法記載します。｜Koushi Kagawa｜note](https://note.com/koushikagawa/n/n1b5bb4a69514)</br>
->- [認証-Laravel-Web職人のためのPHPフレームワーク]https://laravel.com/docs/6.x/authentication#included-views</br>
+>- [認証-Laravel-Web職人のためのPHPフレームワーク](https://laravel.com/docs/6.x/authentication#included-views)</br>
 >
 >1. `Laravel/ui`をインストール
 >   ```shell

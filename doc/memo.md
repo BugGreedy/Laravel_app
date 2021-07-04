@@ -5,6 +5,8 @@
 * [モデル作成時のオプションについて](#モデル作成時のオプションについて)</br>
 * [リソースコントローラーとは](#リソースコントローラーとは)</br>
 * [フォームファサードの書き方](#フォームファサードの書き方)</br>
+* [あるレコードから指定したカラムの値のみを取り出してくれる関数](#あるレコードから指定したカラムの値のみを取り出してくれる関数)</br>
+* [Laravelのapp作成時のオプション`–prefer-dist`について](#Laravelのapp作成時のオプション`–prefer-dist`について)</br>
 
 
 </br>
@@ -104,4 +106,47 @@ workintherain@MacBook-Pro lunchmap %
 ***
 </br>
 
-`pluck('name','id')`：あるレコードから指定したカラムの値のみを取り出してくれる関数。
+### あるレコードから指定したカラムの値のみを取り出してくれる関数
+4-8
+`pluck('name','id')`</br>
+新規投稿フォームにカテゴリの選択肢としてCategoryモデルの値を借りてくるときに使用</br>
+
+```php
+// lunchmap/app/Http/Controllers/ShopController.php
+// 頭の部分の箇所に下記を追記
+
+use App\Models\Shop;
+// 下記を追加
+use App\Models\Category;
+use Illuminate\Http\Request;
+
+//省略
+public function create()
+{
+    //下記を追記
+    $categories = Category::all()->pluck('name','id');
+    return view('new',['categories'=> $categories]);
+}
+```
+</br>
+
+***
+</br>
+
+### Laravelのapp作成時のオプション`–prefer-dist`について
+例：
+```shell
+$ composer create-project laravel/laravel アプリケーション名 --prefer-dist
+```
+の`-prefer-dist`はバージョン管理システムを含まないというオプション。</br>
+</br>
+
+バージョン管理を行う場合は`-prefer-source`を用いる。</br>
+`-prefer-source`でプロジェクトディレクトリを作成すると、`.git`ファイル(gitを管理するファイル)が含まれてアプリケーションディレクトリが作成される。</br>
+参考：https://hara-chan.com/it/programming/prefer-dist-prefer-source-difference/
+</br>
+</br>
+
+***
+</br>
+

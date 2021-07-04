@@ -22,7 +22,8 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
-        //
+    {   
+        // 下記を追加
+        \URL::forceScheme('http');
     }
 }

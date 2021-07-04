@@ -178,4 +178,25 @@ DB_DATABASE=myauth
 DB_USERNAME=root
 DB_PASSWORD=root
 ```
+次にマイグレートを実行。</br>
 
+```shell
+% php artisan migrate
+```
+これでDB`myauth`にアプリケーション内で設定していた`users,password_resets,migration`(あと`failed_jobs`)が追加できた。</br>
+</br>
+
+次にアプリケーション全体の設定として`http(本来はhttps)`で行うように設定を行う。</br>
+```php
+// test_auth/app/Providers/AppServiceProvider.php
+/**
+ * Bootstrap any application services.
+ *
+ * @return void
+ */
+public function boot()
+{   
+    // 下記を追加
+    \URL::forcScheme('http');
+}
+```

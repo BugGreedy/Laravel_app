@@ -200,3 +200,5 @@ public function boot()
     \URL::forcScheme('http');
 }
 ```
+
+ここで

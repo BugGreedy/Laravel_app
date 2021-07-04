@@ -266,4 +266,6 @@ mogumogu
 ***
 </br>
 
+Gitエラーが出たので再度push
+
 

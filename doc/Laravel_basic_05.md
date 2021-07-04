@@ -5,6 +5,7 @@
 [5-2_ユーザー管理機能を追加しよう](#5-2_ユーザー管理機能を追加しよう)</br>
 [* エラー対処1_make:authができないため、代わりの方法で対処](#エラー対処1_make:authができないため、代わりの方法で対処)</br>
 [5-3_ユーザー管理用のテーブルを用意しよう](#5-3_ユーザー管理用のテーブルを用意しよう)</br>
+[5-4_ログインフォームの動作確認をしよう](#5-4_ログインフォームの動作確認をしよう)</br>
 
 
 </br>
@@ -201,4 +202,68 @@ public function boot()
 }
 ```
 
-ここで
+### エラー対処2_ログイン画面にCSSが適用されない件
+>ここでログイン画面がプレーンなHTMLなままなので理由と対策を調査。</br>
+>(カリキュラムや`laravle/ui`だと何かのCSSが適用されている。)</br>
+>参考：
+>[[Laravel 6.0+] ログイン・登録画面を用意する - Larapet]https://larapet.hinaloe.net/2019/09/11/scaffold-auth-screen/</br>
+></br>
+>どうやらLaravel_6以降のバージョンではそれまで同梱されていたBootstrapのJS/CSSがなくなった事でこうなっているらしい。</br>
+>(ui:auth だけではスタイルの適用されていない中途半端な画面になる)</br>
+>なのでこれを時前で用意する必要がある。</br>
+>
+>```shell
+># VueやReactを利用しない、Bootstrap(+jQuery)のみのプリセット 
+>$ artisan ui bootstrap --auth 
+># Bootstrapに加えてVue.jsを利用する 
+>$ artisan ui vue --auth 
+># Vue.jsではなくReactを利用する 
+>$ artisan ui react --auth
+>```
+>これらで生成したプリセットはコンパイル前の sass, js のみなのでwebpack(laravel-mix)でコンパイルする必要がある。</br>
+>なおこれにはnode.jsが必要。</br>
+>`laravel/ui`導入時に一緒にインストールした`npm`を用いて
+>```shell
+># with npm
+>$ npm i
+># 開発用ビルド
+>$ npm run dev
+># 本番用ビルド【実行していない)
+>$ npm run prod
+>
+>  Laravel Mix v6.0.25   
+>                         
+>
+>✔ Compiled Successfully in 5673ms
+>┌───────────────────────────────────────────────────────────┬─────────┐
+>│                                                      File │ Size    │
+>├───────────────────────────────────────────────────────────┼─────────┤
+>│                                                /js/app.js │ 1.4 MiB │
+>│                                               css/app.css │ 178 KiB │
+>└───────────────────────────────────────────────────────────┴─────────┘
+>webpack compiled successfully
+>```
+>ここでブラウザを確認(http://localhost:8000/register)
+>したらCSSが反映されいたのでOK。
+</br>
+
+***
+</br>
+
+### 5-4_ログインフォームの動作確認をしよう
+ここではhttp://localhost:8000/register
+にアクセスしてユーザー登録を行ってみた。</br>
+```
+username:
+mogura
+email:
+mogura@mogura.jp
+pass:
+mogumogu
+```
+</br>
+
+***
+</br>
+
+

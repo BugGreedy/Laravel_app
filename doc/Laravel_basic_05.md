@@ -258,7 +258,7 @@ public function boot()
 username:
 mogura
 email:
-mogura@mogura.jp
+mogura@mogura.com
 pass:
 mogumogu
 ```
@@ -267,6 +267,5 @@ mogumogu
 ***
 </br>
 
-Gitエラーが出たので再度push
 
 

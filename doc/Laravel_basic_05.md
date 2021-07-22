@@ -7,6 +7,7 @@
 [5-3_ユーザー管理用のテーブルを用意しよう](#5-3_ユーザー管理用のテーブルを用意しよう)</br>
 [*_エラー対処2_ログイン画面にCSSが適用されない件](#エラー対処2_ログイン画面にCSSが適用されない件)</br>
 [5-4_ログインフォームの動作確認をしよう](#5-4_ログインフォームの動作確認をしよう)</br>
+[5-5_ログイン機能を追加しよう](#5-5_ログイン機能を追加しよう)</br>
 
 
 </br>
@@ -96,20 +97,25 @@ test_auth % php artisan make:auth
 >- [認証-Laravel-Web職人のためのPHPフレームワーク](https://laravel.com/docs/6.x/authentication#included-views)</br>
 >
 >1. `Laravel/ui`をインストール
+>
 >   ```shell
 >   composer require laravel/ui
 >   ```
 >   </br>
+> 
 >2. 認証関連のビューファイルの作成
+>
 >   ```shell
 >   php artisan ui vue --auth
->
+>   
 >   Vue scaffolding installed successfully.
 >   Please run "npm install && npm run dev" to compile your fresh scaffolding.
 >   Authentication scaffolding generated successfully.
 >   ```
 >   </br>
+>
 >3. メッセージにあった`"npm install && npm run dev"`を実行。
+>
 >   ```shell
 >   test_auth % npm install
 >   npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
@@ -266,6 +272,181 @@ mogumogu
 
 ***
 </br>
+
+### 5-5_ログイン機能を追加しよう
+ここではLunchmapアプリにユーザー機能を追加する。</br>
+前々章でやった[authを作成するコマンド](#エラー対処1_makeauthができないため代わりの方法で対処)を行う。</br>
+
+```shell
+% composer require lalavel/ui
+% npm install
+% npm run dev
+```
+routeを確認するとユーザー管理用のrouteを追加している。</br>
+```php
+//lunchmap/routes/web.php
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+```
+またビューにはauthというビューが追加されている。</br>
+</br>
+
+それではlunchmapアプリでユーザー登録とログイン機能を利用できるようにする。</br>
+共通テンプレートに下記の記述を記載する。</br>
+```php
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+
+    <!-- 下記を追加 -->
+    <meta name='csrf-token' content='{{ csrf_token() }}'>
+
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+    <title>Lunchmap</title>
+    
+    <!-- 下記を追加 -->
+    <script src='{{ asset("js/app.js") }}'defer></script>
+
+    <style>
+        body {
+            padding-top: 80px;
+        }
+
+    </style>
+</head>
+```
+>* `<meta name='csrf-token' content='{{ csrf_token() }}'>`について</br>
+>`csrf_token()`とは**Cross Site Request Forgery(リクエスト強要)**と呼ばれる攻撃手法に対策するものです。</br>
+>CSRFはWebアプリケーションへのリクエストを記述した命令を不本意に実行させて、その人の権限でリクエストを実行させるという攻撃です。</br>
+>例えば本講座ではPOSTメソッドを使ってLunchmapアプリにお店を追加しますが、</br>
+>1. お店を追加するPOSTリクエストを記述したボタンのある偽のサイトを用意する
+>2. 攻撃対象のユーザーに偽のサイトへアクセスさせる
+>3. 攻撃対象のユーザーが(1)のボタンをクリックしてしまう
+>4. 攻撃対象のユーザーがLunchmapアプリにログイン中だった場合、クリックしたボタンのPOSTメソッドが受理されてしまい、意図せずお店が追加されてしま>う
+></br>
+>という流れで攻撃が成立してしまいます。</br>
+>実際に存在するSNSで、CSRFを利用してユーザーの知らないところで不本意な投稿を大量に繰り返されてしまうという事件がありました。</br>
+>このことの対策として、一回使い切りの認証情報を作ることで毎回「本当に本人が要求したリクエストなのか？」ということを確認する方法があります。</br>
+>この認証情報は毎回変わりますので事前に偽のリクエストを作ることが難しくなりますし、最悪認証情報を盗まれてしまったとして使い捨てなのでその時点では>もう使用済みで破棄されているから大丈夫、ということになります。</br>
+></br>
+>Laravelではこの「一回使い切りの認証情報」を簡単に利用できるようになっています。一回使い切りの認証情報を自動で作成し、その認証情報が正しいかの照>合まで行ってくれるのが「csrf_token()」という機能なのです。</br>
+></br>
+
+>* `<script src='{{ asset("js/app.js") }}' defer></script>`という記述について</br>
+>ここでapp.jsを読み込んでいるのですが、読み込まれているapp.jsはpublic/js/app.jsにあります。</br>
+>しかし、このapp.jsは別のスクリプトをコンパイルしてブラウザで表示するように圧縮されたものであり、その圧縮する前の本体であるスクリプトはresources/js/app.jsとなります。</br>
+>本体のapp.jsの8行目で同じディレクトリにあるbootstrap.jsが呼び出されていますが、このbootstrap.jsの中に上の項で解説したcsrf_tokenの認証に関わる処理が記述されており(27-39行目)、csrf_tokenを利用するために読み込む必要のあるスクリプトなのです。</br>
+</br>
+
+次にナビゲーターバーにログイン機能の表示を追加する。</br>
+ログイン機能用の共通テンプレートから下記を抜粋し、共通テンプレートに貼り付ける。</br>
+
+```php
+//lunchmap/resources/views/layouts/app.blade.php
+<button class="navbar-toggler" type="button" data-toggle="collapse"
+    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+    aria-label="{{ __('Toggle navigation') }}">
+    <span class="navbar-toggler-icon"></span>
+</button>
+
+<div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!-- Left Side Of Navbar -->
+    <ul class="navbar-nav mr-auto">
+
+    </ul>
+
+    <!-- Right Side Of Navbar -->
+    <ul class="navbar-nav ml-auto">
+        <!-- Authentication Links -->
+        @guest
+            @if (Route::has('login'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                </li>
+            @endif
+
+            @if (Route::has('register'))
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                </li>
+            @endif
+        @else
+            <li class="nav-item dropdown">
+                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                    {{ Auth::user()->name }}
+                </a>
+
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                              document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
+                </div>
+            </li>
+        @endguest
+    </ul>
+</div>
+```
+をコピーし、下記の箇所にペースト
+```php
+//lunchmap/resources/views/layout.blade.php
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no'>
+    <meta name='csrf-token' content='{{ csrf_token() }}'>
+    <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'>
+    <title>Lunchmap</title>
+    <script src='{{ asset("js/app.js") }}'difer></script>
+
+    <style>
+        body {
+            padding-top: 80px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <nav class='navbar navbar-expand-md navbar-dark bg-dark fixed-top'>
+        <a class='navbar-brand' href={{ route('shop.list') }}>Lunchmap</a>
+        // ここに挿入
+    </nav>
+    <div class='container'>
+        @yield('content')
+    </div>
+</body>
+
+</html>
+```
+これでlunchmapアプリのナビゲーションバーに前章で追加したような`Login`と`Reguster`が表示されるようになった。
+ユーザーを2つ追加してDBにて追加されているか確認して終了する。
+```
+ユーザー1：
+name:mogura
+mail:mogura@mogura.com
+pass:mogumogu
+
+ユーザー2：
+name:mogura2
+mail:mogura2@mogura.com
+pass:mogumogu
+```
+
+
+
+
 
 
 
